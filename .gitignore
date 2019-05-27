@@ -1,0 +1,7 @@
+node_modules
+*.db
+*-lock.json
+pids
+*.pid
+*.seed
+*.pid.lock
