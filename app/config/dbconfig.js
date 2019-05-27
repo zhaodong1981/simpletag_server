@@ -24,6 +24,28 @@ let init = function () {
         " lastName TEXT," +
         " car INT" +
         ")");
+
+    db.run("CREATE TABLE if not exists users (" +
+        "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+        " username TEXT," +
+        " password TEXT," +
+        " firstName TEXT," +
+        " lastName TEXT" +
+        ")");
+
+    db.run("CREATE TABLE if not exists links (" +
+        "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+        " users.id FOREIGN KEY," +
+        " title TEXT," +
+        " description TEXT," +
+        " createdate TEXT," +
+        " modifydate TEXT" +
+        ")");
+
+    db.run("CREATE TABLE if not exists tag-link (" +
+        "tag TEXT," +
+        " links.id FOREIGN KEY PRIMARY KEY (tag, links.id)" +
+        ")");
 };
 
 module.exports = {
