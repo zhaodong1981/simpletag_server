@@ -19,11 +19,14 @@ class LinkDao {
      * @return entity
      */
     findByUserId(user_id) {
-        let sqlRequest = "SELECT * FROM links where user_id=" + user_id;
+        let sqlRequest = "SELECT * FROM links,tag_link where user_id=" + user_id + " AND links.id=tag_link.link_id ORDER BY link_id ASC";
         return this.common.findAll(sqlRequest).then(rows => {
             let links = [];
+            let current_link_id = NULL;
+            let next_link_id = NULL;
             for (const row of rows) {
-                links.push(new Link(row.id, row.title, row.url, row.description, row.user_id, row.createdate,row.modifydate));
+                let tags = [];
+                links.push(new Link(row.id, row.title, row.url, row.description, row.user_id, row.createdate, row.modifydate, tags));
             }
             return links;
         });
@@ -38,7 +41,8 @@ class LinkDao {
         return this.common.findAll(sqlRequest).then(rows => {
             let links = [];
             for (const row of rows) {
-                links.push(new Link(row.id, row.title, row.url, row.description, row.user_id, row.createdate,row.modifydate));
+                let tags = [];
+                links.push(new Link(row.id, row.title, row.url, row.description, row.user_id, row.createdate,row.modifydate, tags));
             }
             return links;
         });
