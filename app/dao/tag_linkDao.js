@@ -18,8 +18,8 @@ class Tag_linkDao {
      * @params id
      * @return entity
      */
-    findByLinkId(link_id) {
-        let sqlRequest = "SELECT tag, link_id from tag_link WHERE link_id="+link_id;
+    findByUserId(user_id) {
+        let sqlRequest = "SELECT tag, link_id from tag_link WHERE link_id in (select id from links where user_id=" + user_id + ")";
         return this.common.findAll(sqlRequest).then(rows => {
             let tag_links = [];
             for (const row of rows) {
