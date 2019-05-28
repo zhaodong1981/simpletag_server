@@ -19,14 +19,19 @@ class LinkDao {
      * @return entity
      */
     findByUserId(user_id) {
-        let sqlRequest = "SELECT * FROM links,tag_link where user_id=" + user_id + " AND links.id=tag_link.link_id ORDER BY link_id ASC";
+        let sqlRequest = "SELECT * FROM (SELECT * FROM links WHERE user_id=" + user_id + ") AS tmp_links LEFT OUTER JOIN tag_link ON tmp_links.id=tag_link.link_id ORDER BY tmp_links.id ASC";
         return this.common.findAll(sqlRequest).then(rows => {
             let links = [];
-            let current_link_id = NULL;
-            let next_link_id = NULL;
+            let current_link = null;
+
             for (const row of rows) {
-                let tags = [];
-                links.push(new Link(row.id, row.title, row.url, row.description, row.user_id, row.createdate, row.modifydate, tags));
+                if ( current_link == null || row.id != current_link.id ){
+                    current_link = new Link(row.id, row.title, row.url, row.description, row.user_id, row.createdate, row.modifydate, []);
+                    links.push(current_link);
+                }
+                if (row.tag != null) {
+                    current_link.tags.push(row.tag);
+                }
             }
             return links;
         });
@@ -37,12 +42,19 @@ class LinkDao {
      * @return all entities
      */
     findAll() {
-        let sqlRequest = "SELECT * FROM links";
+        let sqlRequest = "SELECT * FROM links LEFT OUTER JOIN tag_link ON links.id=tag_link.link_id ORDER BY link_id ASC";
         return this.common.findAll(sqlRequest).then(rows => {
             let links = [];
+            let current_link = null;
+
             for (const row of rows) {
-                let tags = [];
-                links.push(new Link(row.id, row.title, row.url, row.description, row.user_id, row.createdate,row.modifydate, tags));
+                if ( current_link == null || row.id != current_link.id ){
+                    current_link = new Link(row.id, row.title, row.url, row.description, row.user_id, row.createdate, row.modifydate, []);
+                    links.push(current_link);
+                }
+                if (row.tag != null) {
+                    current_link.tags.push(row.tag);
+                }
             }
             return links;
         });
