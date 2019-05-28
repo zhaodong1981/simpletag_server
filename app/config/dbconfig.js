@@ -10,6 +10,8 @@ let db = new sqlite3.Database('db/sqlite.db');
 
 /* Init */
 let init = function () {
+    //enable foreign key contraints
+    db.run("PRAGMA foreign_keys = ON;");
 };
 
 module.exports = {
