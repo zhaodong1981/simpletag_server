@@ -17,8 +17,8 @@ router.get('/exists/:id', function (req, res) {
     linkController.exists(req, res);
 });
 
-router.get('/:id', function (req, res) {
-    linkController.findById(req, res);
+router.get('/:user_id', function (req, res) {
+    linkController.findByUserId(req, res);
 });
 
 router.get('/', function (req, res) {

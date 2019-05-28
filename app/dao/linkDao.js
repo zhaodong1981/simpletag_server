@@ -14,15 +14,19 @@ class LinkDao {
     }
 
     /**
-     * Tries to find an entity using its Id / Primary Key
-     * @params id
+     * Tries to find an entity using user Id
+     * @params user_id
      * @return entity
      */
-    findById(id) {
-        let sqlRequest = "SELECT * FROM links WHERE id=$id";
-        let sqlParams = {$id: id};
-        return this.common.findOne(sqlRequest, sqlParams).then(row =>
-            new Link(row.id, row.title, row.url, row.description, row.user_id, row.createdate,row.modifydate));
+    findByUserId(user_id) {
+        let sqlRequest = "SELECT * FROM links where user_id=" + user_id;
+        return this.common.findAll(sqlRequest).then(rows => {
+            let links = [];
+            for (const row of rows) {
+                links.push(new Link(row.id, row.title, row.url, row.description, row.user_id, row.createdate,row.modifydate));
+            }
+            return links;
+        });
     };
 
     /**

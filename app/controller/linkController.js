@@ -22,10 +22,10 @@ class LinkController {
      * @params req, res
      * @return entity
      */
-    findById(req, res) {
-        let id = req.params.id;
+    findByUserId(req, res) {
+        let user_id = req.params.user_id;
 
-        this.linkDao.findById(id)
+        this.linkDao.findByUserId(user_id)
             .then(this.common.findSuccess(res))
             .catch(this.common.findError(res));
     };
