@@ -19,14 +19,14 @@ class LinkDao {
      * @return entity
      */
     findByUserId(user_id) {
-        let sqlRequest = "SELECT * FROM (SELECT * FROM links WHERE user_id=" + user_id + ") AS tmp_links LEFT OUTER JOIN tag_link ON tmp_links.id=tag_link.link_id ORDER BY tmp_links.id ASC";
+        let sqlRequest = "SELECT id,title,url,description,user_id,date(createdate) cdate,date(modifydate) mdate,tag FROM (SELECT * FROM links WHERE user_id=" + user_id + ") AS tmp_links LEFT OUTER JOIN tag_link ON tmp_links.id=tag_link.link_id ORDER BY tmp_links.id ASC";
         return this.common.findAll(sqlRequest).then(rows => {
             let links = [];
             let current_link = null;
 
             for (const row of rows) {
                 if ( current_link == null || row.id != current_link.id ){
-                    current_link = new Link(row.id, row.title, row.url, row.description, row.user_id, row.createdate, row.modifydate, []);
+                    current_link = new Link(row.id, row.title, row.url, row.description, row.user_id, row.cdate, row.mdate, []);
                     links.push(current_link);
                 }
                 if (row.tag != null) {
@@ -42,14 +42,14 @@ class LinkDao {
      * @return all entities
      */
     findAll() {
-        let sqlRequest = "SELECT * FROM links LEFT OUTER JOIN tag_link ON links.id=tag_link.link_id ORDER BY link_id ASC";
+        let sqlRequest = "SELECT id,title,url,description,user_id,date(createdate) cdate,date(modifydate) mdate,tag FROM links LEFT OUTER JOIN tag_link ON links.id=tag_link.link_id ORDER BY link_id ASC";
         return this.common.findAll(sqlRequest).then(rows => {
             let links = [];
             let current_link = null;
 
             for (const row of rows) {
                 if ( current_link == null || row.id != current_link.id ){
-                    current_link = new Link(row.id, row.title, row.url, row.description, row.user_id, row.createdate, row.modifydate, []);
+                    current_link = new Link(row.id, row.title, row.url, row.description, row.user_id, row.cdate, row.mdate, []);
                     links.push(current_link);
                 }
                 if (row.tag != null) {
