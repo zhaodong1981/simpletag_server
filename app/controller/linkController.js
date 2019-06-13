@@ -47,6 +47,10 @@ class LinkController {
     findByPageSize(req,res) {
         let pagesize = req.query.per_page;
         let page = req.query.page;
+        if (typeof pagesize === 'undefined'){
+            pagesize =-1;
+            page =1;
+        }
         console.log("size " + pagesize + ", page " + page);
         this.linkDao.findByPageSize(pagesize,page)
             .then(this.common.findSuccess(res))

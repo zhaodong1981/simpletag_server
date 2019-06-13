@@ -66,11 +66,11 @@ class LinkDao {
      */
     findByPageSize(pagesize,page) {
         let offset=pagesize * (page -1);
-        let sqlRequest = "SELECT id,title,url,description,user_id,date(createdate) cdate,date(modifydate) mdate,tag FROM links LEFT OUTER JOIN tag_link ON links.id=tag_link.link_id ORDER BY mdate DESC LIMIT "+pagesize + " OFFSET " + offset;
-        let sqlRequest2 = "SELECT COUNT(*) AS count FROM links";
-        let links = [];
+        let sqlRequest = "SELECT id,title,url,description,user_id,datetime(createdate) cdate,datetime(modifydate) mdate,tag FROM links LEFT OUTER JOIN tag_link ON links.id=tag_link.link_id ORDER BY mdate DESC LIMIT "+pagesize + " OFFSET " + offset;
+     //   let sqlRequest2 = "SELECT COUNT(*) AS count FROM links";
+        
         return this.common.findAll(sqlRequest).then(rows => {
-         
+            let links = [];
             let current_link = null;
             let count = 0;
             for (const row of rows) {
@@ -82,9 +82,13 @@ class LinkDao {
                     current_link.tags.push(row.tag);
                 }
             }
-           
+           if(pagesize === -1){
             return links;
-        }).then( link => {this.common.findOne(sqlRequest2)}).then(row => { return {'page' : page, 'total' : row.count, data : links}});
+           }else{
+               return {'page' : page, 'total' : 10, data : links}
+           }
+           
+        });
     };
     /**
      * Counts all the records present in the database
