@@ -41,11 +41,24 @@ class LinkController {
     };
 
     /**
+     * Finds all entities.
+     * @return all entities
+     */
+    findByPageSize(req,res) {
+        let pagesize = req.query.per_page;
+        let page = req.query.page;
+        console.log("size " + pagesize + ", page " + page);
+        this.linkDao.findByPageSize(pagesize,page)
+            .then(this.common.findSuccess(res))
+            .catch(this.common.findError(res));
+    };
+
+
+    /**
      * Counts all the records present in the database
      * @return count
      */
     countAll(res) {
-
         this.linkDao.countAll()
             .then(this.common.findSuccess(res))
             .catch(this.common.serverError(res));
