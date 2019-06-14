@@ -85,7 +85,7 @@ class LinkDao {
            if(pagesize === -1){
             return links;
            }else{
-               return {'page' : page, 'total' : 10, data : links}
+               return {'page' : page, data : links}
            }
            
         });
