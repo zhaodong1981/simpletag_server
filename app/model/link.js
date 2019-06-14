@@ -3,12 +3,12 @@
  */
 
 class Link {
-    constructor(id, title, url, description, user_id, createdate, modifydate, tags) {
+    constructor(id, title, url, description,createdate, modifydate, tags) {
         this.id = id;
         this.title = title;
         this.url = url;
         this.description = description;
-        this.user_id = user_id;
+        this.user_id = 1;
         this.createdate = createdate;
         this.modifydate = modifydate;
         this.tags = tags;

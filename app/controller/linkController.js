@@ -81,7 +81,6 @@ class LinkController {
         link.title = req.body.title;
         link.description = req.body.description;
         link.url = req.body.url;
-        link.user_id = req.body.user_id;
 
         let tags = req.body.tags;
         if (typeof tags === 'undefined' || tags.constructor !== Array && tags.length === 0){
@@ -105,7 +104,7 @@ class LinkController {
         link.title = req.body.title;
         link.description = req.body.description;
         link.url = req.body.url;
-        link.user_id = req.body.user_id;
+        link.user_id = 1;
        
         let tags = req.body.tags;
         if (typeof tags !== 'undefined' && tags.constructor === Array && tags.length >0){

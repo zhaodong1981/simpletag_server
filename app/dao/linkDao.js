@@ -42,14 +42,14 @@ class LinkDao {
      * @return all entities
      */
     findAll() {
-        let sqlRequest = "SELECT id,title,url,description,user_id,date(createdate) cdate,date(modifydate) mdate,tag FROM links LEFT OUTER JOIN tag_link ON links.id=tag_link.link_id ORDER BY link_id ASC";
+        let sqlRequest = "SELECT id,title,url,description,date(createdate) cdate,date(modifydate) mdate,tag FROM links LEFT OUTER JOIN tag_link ON links.id=tag_link.link_id ORDER BY link_id ASC";
         return this.common.findAll(sqlRequest).then(rows => {
             let links = [];
             let current_link = null;
 
             for (const row of rows) {
                 if ( current_link == null || row.id != current_link.id ){
-                    current_link = new Link(row.id, row.title, row.url, row.description, row.user_id, row.cdate, row.mdate, []);
+                    current_link = new Link(row.id, row.title, row.url, row.description, row.cdate, row.mdate, []);
                     links.push(current_link);
                 }
                 if (row.tag != null) {
@@ -66,7 +66,7 @@ class LinkDao {
      */
     findByPageSize(pagesize,page) {
         let offset=pagesize * (page -1);
-        let sqlRequest = "SELECT id,title,url,description,user_id,datetime(createdate) cdate,datetime(modifydate) mdate,tag FROM links LEFT OUTER JOIN tag_link ON links.id=tag_link.link_id ORDER BY mdate DESC LIMIT "+pagesize + " OFFSET " + offset;
+        let sqlRequest = "SELECT id,title,url,description,datetime(createdate) cdate,datetime(modifydate) mdate,tag FROM links LEFT OUTER JOIN tag_link ON links.id=tag_link.link_id ORDER BY mdate DESC LIMIT "+pagesize + " OFFSET " + offset;
      //   let sqlRequest2 = "SELECT COUNT(*) AS count FROM links";
         
         return this.common.findAll(sqlRequest).then(rows => {
@@ -75,7 +75,7 @@ class LinkDao {
             let count = 0;
             for (const row of rows) {
                 if ( current_link == null || row.id != current_link.id ){
-                    current_link = new Link(row.id, row.title, row.url, row.description, row.user_id, row.cdate, row.mdate, []);
+                    current_link = new Link(row.id, row.title, row.url, row.description, row.cdate, row.mdate, []);
                     links.push(current_link);
                 }
                 if (row.tag != null) {
@@ -109,7 +109,6 @@ class LinkDao {
             "title=$title, " +
             "url=$url, " +
             "description=$description, " +
-            "user_id=$user_id, " +
             "modifydate=julianday('now') " +
             "WHERE id=$id";
 
@@ -117,7 +116,6 @@ class LinkDao {
             $title: Link.title,
             $url: Link.url,
             $description: Link.description,
-            $user_id: Link.user_id,
             $id: Link.id
         };
         return this.common.run(sqlRequest, sqlParams);
