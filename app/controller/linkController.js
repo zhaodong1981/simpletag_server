@@ -77,15 +77,21 @@ class LinkController {
      */
     update(req, res) {
         let link = new Link();
-        link.id = req.body.id;
+        link.id = req.params.id;
         link.title = req.body.title;
         link.description = req.body.description;
         link.url = req.body.url;
         link.user_id = req.body.user_id;
 
-        return this.linkDao.update(link)
-            .then(this.common.editSuccess(res))
-            .catch(this.common.serverError(res));
+        let tags = req.body.tags;
+        if (typeof tags === 'undefined' || tags.constructor !== Array && tags.length === 0){
+            tags = [];
+        }
+        console.log("link_id="+link.id+",new tags: " + tags);
+        return this.linkDao.update(link).then(
+            this.taglinkDao.updateTagsforLink(link.id, tags))
+          .then(this.common.editSuccess(res))
+          .catch(this.common.serverError(res));
     };
 
     /**

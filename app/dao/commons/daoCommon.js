@@ -76,14 +76,17 @@ class Common {
                 if (this.changes === 1) {
                     resolve(true);
                 } else if (this.changes === 0) {
-                    reject(
-                        new DaoError(21, "Entity not found")
-                    )
-                } else {
+                    //reject(
+                     //   new DaoError(21, "Entity not found")
+                    //)
                     console.log(err);
-                    reject(
-                        new DaoError(11, "Invalid arguments")
-                    )
+                    resolve(true);
+                } else {
+                    resolve(true);
+                    console.log(err);
+                  //  reject(
+                  //      new DaoError(11, "Invalid arguments")
+                   // )
                 }
             })
         });

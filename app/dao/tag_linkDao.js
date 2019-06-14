@@ -104,7 +104,27 @@ class Tag_linkDao {
         
        //     INSERT into tag_link (tag,link_id) values('test123',(select id as link_id from links WHERE url ='https://www.163.com' ORDER BY modifydate DESC LIMIT 1))
     };
-
+    updateTagsforLink(link_id, tags) {
+        let sqlRequest = "DELETE FROM tag_link WHERE link_id=$link_id";
+        console.log("Updating tags for link " + link_id);
+        let sqlParams = {
+            $link_id: link_id
+        };
+        if (tags.length === 0){
+            return this.common.run(sqlRequest, sqlParams);
+        } else {
+            return this.common.run(sqlRequest, sqlParams).then(()=>{
+                let sqlRequest2 = "INSERT into tag_link (tag,link_id) VALUES ";
+                for (const tag of tags){
+                    sqlRequest2 += "('" + tag + "'," + link_id + "),"
+                }
+                sqlRequest2 = sqlRequest2.slice(0, -1);
+                console.log("Updating tags for link " + sqlRequest2);
+                return this.common.runNoArg(sqlRequest2);
+            });
+        }
+        
+    };
     /**
      * Deletes an entity using its Id / Primary Key
      * @params id
