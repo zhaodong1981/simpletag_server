@@ -1,6 +1,8 @@
 /* Load Link Data Access Object */
 const LinkDao = require('../dao/linkDao');
 
+const Tag_linkDao = require('../dao/tag_linkDao');
+
 /* Load Controller Common function */
 const ControllerCommon = require('./common/controllerCommon');
 
@@ -15,6 +17,7 @@ class LinkController {
     constructor() {
         this.linkDao = new LinkDao();
         this.common = new ControllerCommon();
+        this.taglinkDao = new Tag_linkDao();
     }
 
     /**
@@ -51,7 +54,6 @@ class LinkController {
             pagesize =-1;
             page =1;
         }
-        console.log("size " + pagesize + ", page " + page);
         this.linkDao.findByPageSize(pagesize,page)
             .then(this.common.findSuccess(res))
             .catch(this.common.findError(res));
@@ -98,11 +100,19 @@ class LinkController {
         link.description = req.body.description;
         link.url = req.body.url;
         link.user_id = req.body.user_id;
-
-        return this.linkDao.create(link)
+       
+        let tags = req.body.tags;
+        if (typeof tags !== 'undefined' && tags.constructor === Array && tags.length >0){
+            return this.linkDao.create(link).then(
+              this.taglinkDao.createStr(tags,link.url))
             .then(this.common.editSuccess(res))
             .catch(this.common.serverError(res));
-
+        } else {
+            return this.linkDao.create(link)
+            .then(this.common.editSuccess(res))
+            .catch(this.common.serverError(res));
+        }
+    
     };
 
     /**

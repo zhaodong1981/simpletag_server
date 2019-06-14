@@ -88,6 +88,29 @@ class Common {
             })
         });
     }
+    runNoArg(sqlRequest) {
+        return new Promise(function (resolve, reject) {
+            database.db.all(sqlRequest, function (err) {
+                if (typeof this.changes === 'undefined'){
+                    console.log("this.changes === undefined" );
+                } else{
+                    console.log("this.changes =" + this.changes );
+                    if (this.changes === 1) {
+                        resolve(true);
+                    } else if (this.changes === 0) {
+                        reject(
+                            new DaoError(21, "Entity not found")
+                        )
+                    } else {
+                        console.log(err);
+                        reject(
+                            new DaoError(11, "Invalid arguments")
+                        )
+                    }
+                }
+            })
+        });
+    }
 }
 
 module.exports = Common;

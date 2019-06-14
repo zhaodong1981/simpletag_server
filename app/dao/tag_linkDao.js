@@ -85,6 +85,26 @@ class Tag_linkDao {
         return this.common.run(sqlRequest, sqlParams);
     };
 
+        /**
+     * Creates the given entity in the database
+     * @params tags
+     * @params url
+     * returns database insertion status
+     */
+    createStr(tags,url) {
+      let sqlRequest1 = "select id as link_id from links WHERE url ='" + url +"' ORDER BY modifydate DESC LIMIT 1";
+       return this.common.findOne(sqlRequest1).then((row) => {
+            let sqlRequest2 = "INSERT into tag_link (tag,link_id) VALUES ";
+            for (const tag of tags){
+                sqlRequest2 += "('" + tag + "'," + row.link_id + "),"
+            }
+            sqlRequest2 = sqlRequest2.slice(0, -1);
+            return this.common.runNoArg(sqlRequest2);
+        });
+        
+       //     INSERT into tag_link (tag,link_id) values('test123',(select id as link_id from links WHERE url ='https://www.163.com' ORDER BY modifydate DESC LIMIT 1))
+    };
+
     /**
      * Deletes an entity using its Id / Primary Key
      * @params id
