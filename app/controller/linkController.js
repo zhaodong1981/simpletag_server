@@ -60,7 +60,7 @@ class LinkController {
     };
 
     findByKeywords(req,res) {
-        let keywords = req.query.keywords;
+        let keywords = req.query.q;
         console.log("keywords = " + keywords);
         this.linkDao.findByKeywords(keywords)
             .then(this.common.findSuccess(res))
