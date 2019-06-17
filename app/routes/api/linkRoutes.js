@@ -13,6 +13,14 @@ router.get('/count', function (req, res) {
     linkController.countAll(res);
 });
 
+/**
+ * search links by keywords in link title or tags
+ */
+router.get('/search', function (req, res) {
+  //  linkController.findAll(res);
+    linkController.findByKeywords(req,res);
+});
+
 router.get('/exists/:id', function (req, res) {
     linkController.exists(req, res);
 });

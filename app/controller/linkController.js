@@ -59,6 +59,14 @@ class LinkController {
             .catch(this.common.findError(res));
     };
 
+    findByKeywords(req,res) {
+        let keywords = req.query.keywords;
+        console.log("keywords = " + keywords);
+        this.linkDao.findByKeywords(keywords)
+            .then(this.common.findSuccess(res))
+            .catch(this.common.findError(res));
+    };
+
 
     /**
      * Counts all the records present in the database
