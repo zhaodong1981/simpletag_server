@@ -11,7 +11,6 @@ router.get('/:user_id', function (req, res) {
 });
 
 router.get('/', function (req, res) {
-    console.log("find all tags");
     tag_linkController.findAll(res);
 });
 

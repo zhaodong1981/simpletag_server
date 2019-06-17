@@ -93,8 +93,12 @@ class LinkDao {
 
 
     findByKeywords(keywords){
-        let newBuff = Buffer.from(keywords);
-        keywords = newBuff.toString('UTF-8');//encoding into UTF-8 used by sqlite3
+        if (typeof keywords != 'undefined'){
+            console.log(" converting " + keywords );
+          let newBuff = Buffer.from(keywords);
+          keywords = newBuff.toString('UTF-8');//encoding into UTF-8 used by sqlite3
+        }
+        
         let sqlRequest = "SELECT id,title,url,description,datetime(createdate) cdate,datetime(modifydate) mdate,tag FROM \
         links LEFT OUTER JOIN tag_link ON links.id=tag_link.link_id WHERE title LIKE '%" + keywords + "%' or url LIKE '%" + keywords +
         "%' or tag_link.link_id in(select link_id from tag_link where tag LIKE '%" + keywords + "%') --case-insensitive ORDER BY mdate DESC";
@@ -115,6 +119,25 @@ class LinkDao {
         });
 
     }
+
+    findByTag(tag) {
+        let sqlRequest = "SELECT id,title,url,description,date(createdate) cdate,date(modifydate) mdate,tag FROM links LEFT OUTER JOIN tag_link ON links.id=tag_link.link_id where tag ='" + tag +"' ORDER BY link_id ASC";
+        return this.common.findAll(sqlRequest).then(rows => {
+            let links = [];
+            let current_link = null;
+
+            for (const row of rows) {
+                if ( current_link == null || row.id != current_link.id ){
+                    current_link = new Link(row.id, row.title, row.url, row.description, row.cdate, row.mdate, []);
+                    links.push(current_link);
+                }
+                if (row.tag != null) {
+                    current_link.tags.push(row.tag);
+                }
+            }
+            return links;
+        });
+    };
 
     /**
      * Counts all the records present in the database
