@@ -93,8 +93,8 @@ class LinkDao {
 
     findByKeywords(keywords){
         let sqlRequest = "SELECT id,title,url,description,datetime(createdate) cdate,datetime(modifydate) mdate,tag FROM \
-        links LEFT OUTER JOIN tag_link ON links.id=tag_link.link_id WHERE title LIKE '%" + keywords 
-        + "%' or tag_link.link_id in(select link_id from tag_link where tag LIKE '%" + keywords + "%') --case-insensitive ORDER BY mdate DESC";
+        links LEFT OUTER JOIN tag_link ON links.id=tag_link.link_id WHERE title LIKE '%" + keywords + "%' or url LIKE '%" + keywords +
+        "%' or tag_link.link_id in(select link_id from tag_link where tag LIKE '%" + keywords + "%') --case-insensitive ORDER BY mdate DESC";
         console.log(sqlRequest);
         return this.common.findAll(sqlRequest).then(rows => {
             let links = [];
@@ -113,7 +113,7 @@ class LinkDao {
         });
 
     }
-    
+
     /**
      * Counts all the records present in the database
      * @return count
