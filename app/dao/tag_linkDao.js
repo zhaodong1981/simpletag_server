@@ -19,11 +19,17 @@ class Tag_linkDao {
      * @return entity
      */
     findByUserId(user_id) {
-        let sqlRequest = "SELECT tag, link_id from tag_link WHERE link_id in (select id from links where user_id=" + user_id + ")";
+        let sqlRequest = "SELECT tag, link_id from tag_link WHERE link_id in (select id from links where user_id=" + user_id + ") ORDER BY tag";
         return this.common.findAll(sqlRequest).then(rows => {
             let tag_links = [];
-            for (const row of rows) {
-                tag_links.push(new Tag_link(row.tag, row.link_id));
+            let current_tag_link = null;
+            for (const row of rows) {         
+               if ( current_tag_link === null || row.tag !== current_tag_link.tag ){
+                    current_tag_link = {"tag": row.tag, "links": []};
+                    tag_links.push(current_tag_link);
+                }
+                current_tag_link.links.push(row.link_id);
+                
             }
             return tag_links;
         });
@@ -34,11 +40,17 @@ class Tag_linkDao {
      * @return all entities
      */
     findAll() {
-        let sqlRequest = "SELECT * FROM tag_link";
+        let sqlRequest = "SELECT * FROM tag_link ORDER BY tag";
         return this.common.findAll(sqlRequest).then(rows => {
             let tag_links = [];
-            for (const row of rows) {
-                tag_links.push(new Tag_link(row.tag, row.link_id));
+            let current_tag_link = null;
+            for (const row of rows) {         
+               if ( current_tag_link === null || row.tag !== current_tag_link.tag ){
+                    current_tag_link = {"tag": row.tag, "links": []};
+                    tag_links.push(current_tag_link);
+                }
+                current_tag_link.links.push(row.link_id);
+                
             }
             return tag_links;
         });

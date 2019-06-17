@@ -102,9 +102,8 @@ class LinkDao {
         return this.common.findAll(sqlRequest).then(rows => {
             let links = [];
             let current_link = null;
-            let count = 0;
             for (const row of rows) {
-                if ( current_link == null || row.id != current_link.id ){
+                if ( current_link === null || row.id !== current_link.id ){
                     current_link = new Link(row.id, row.title, row.url, row.description, row.cdate, row.mdate, []);
                     links.push(current_link);
                 }
