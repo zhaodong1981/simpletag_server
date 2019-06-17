@@ -91,7 +91,10 @@ class LinkDao {
         });
     };
 
+
     findByKeywords(keywords){
+        let newBuff = Buffer.from(keywords);
+        keywords = newBuff.toString('UTF-8');//encoding into UTF-8 used by sqlite3
         let sqlRequest = "SELECT id,title,url,description,datetime(createdate) cdate,datetime(modifydate) mdate,tag FROM \
         links LEFT OUTER JOIN tag_link ON links.id=tag_link.link_id WHERE title LIKE '%" + keywords + "%' or url LIKE '%" + keywords +
         "%' or tag_link.link_id in(select link_id from tag_link where tag LIKE '%" + keywords + "%') --case-insensitive ORDER BY mdate DESC";
