@@ -66,7 +66,7 @@ class LinkDao {
      */
     findByPageSize(pagesize,page) {
         let offset=pagesize * (page -1);
-        let sqlRequest = "SELECT id,title,url,description,datetime(createdate) cdate,datetime(modifydate) mdate,tag FROM links LEFT OUTER JOIN tag_link ON links.id=tag_link.link_id ORDER BY mdate DESC LIMIT "+pagesize + " OFFSET " + offset;
+        let sqlRequest = "SELECT id,title,url,description,date(createdate) cdate,date(modifydate) mdate,tag FROM links LEFT OUTER JOIN tag_link ON links.id=tag_link.link_id ORDER BY mdate DESC LIMIT "+pagesize + " OFFSET " + offset;
      //   let sqlRequest2 = "SELECT COUNT(*) AS count FROM links";
         
         return this.common.findAll(sqlRequest).then(rows => {
