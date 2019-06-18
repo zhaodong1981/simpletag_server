@@ -62,16 +62,12 @@ class LinkController {
     findByKeywords(req,res) {
         let keywords = req.query.q;
         let tag = req.query.tag;
-
-        console.log("keywords = " + keywords + ", tag = " + tag);
                      
         if (typeof tag != 'undefined' && tag !=null && tag != '') {
-            console.log(" searching by tag " + tag)
             this.linkDao.findByTag(tag)
             .then(this.common.findSuccess(res))
             .catch(this.common.findError(res));
         } else {
-            console.log(" searching by keywords " + keywords)
             this.linkDao.findByKeywords(keywords)
             .then(this.common.findSuccess(res))
             .catch(this.common.findError(res));
