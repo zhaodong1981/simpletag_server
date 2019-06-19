@@ -1,31 +1,30 @@
+PRAGMA foreign_keys = ON;
+
 CREATE TABLE if not exists users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT,
+        username TEXT PRIMARY KEY,
         password TEXT,
         firstname TEXT,
-        lastname TEXT 
+        lastname TEXT,
+        schema TEXT
 );
 
-CREATE TABLE if not exists links (
+insert into users(username,password,firstname,lastname,schema ) values ('dzhao','mypass','Dong', 'Zhao','dzhao_');
+
+CREATE TABLE if not exists dzhao_links (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER,
         title TEXT, 
 	url TEXT,
         description TEXT,
         createdate REAL,
-        modifydate REAL,
-	CONSTRAINT fk_users
-        FOREIGN KEY (user_id)
-        REFERENCES users(id)
-        ON DELETE CASCADE
+        modifydate REAL
 );
 
-CREATE TABLE if not exists tag_link (
+CREATE TABLE if not exists dzhao_tag_link (
         tag TEXT,
         link_id INTEGER,
         CONSTRAINT fk_links
         FOREIGN KEY (link_id)
-        REFERENCES links(id)
+        REFERENCES dzhao_links(id)
         ON DELETE CASCADE,
         PRIMARY KEY (tag, link_id)
 );
