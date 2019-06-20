@@ -4,6 +4,8 @@ const Link = require('../model/link');
 /* Load DAO Common functions */
 const daoCommon = require('./commons/daoCommon');
 
+const util = require('../utils/helpers');
+
 /**
  * Link Data Access Object
  */
@@ -19,7 +21,7 @@ class LinkDao {
      * @return entity
      */
     findByUserId(user_id) {
-        let sqlRequest = "SELECT id,title,url,description,user_id,date(createdate) cdate,date(modifydate) mdate,tag FROM (SELECT * FROM links WHERE user_id=" + user_id + ") AS tmp_links LEFT OUTER JOIN tag_link ON tmp_links.id=tag_link.link_id ORDER BY tmp_links.id ASC";
+        let sqlRequest = "SELECT id,title,url,description,user_id,date(createdate) cdate,date(modifydate) mdate,tag FROM (SELECT * FROM " + util.processUser() + "links WHERE user_id=" + user_id + ") AS tmp_links LEFT OUTER JOIN " + util.processUser() + "tag_link ON tmp_links.id=" + util.processUser() + "tag_link.link_id ORDER BY tmp_links.id ASC";
         return this.common.findAll(sqlRequest).then(rows => {
             let links = [];
             let current_link = null;
@@ -42,7 +44,7 @@ class LinkDao {
      * @return all entities
      */
     findAll() {
-        let sqlRequest = "SELECT id,title,url,description,date(createdate) cdate,date(modifydate) mdate,tag FROM links LEFT OUTER JOIN tag_link ON links.id=tag_link.link_id ORDER BY link_id ASC";
+        let sqlRequest = "SELECT id,title,url,description,date(createdate) cdate,date(modifydate) mdate,tag FROM " + util.processUser() + "links LEFT OUTER JOIN " + util.processUser() + "tag_link ON " + util.processUser() + "links.id=tag_link.link_id ORDER BY link_id ASC";
         return this.common.findAll(sqlRequest).then(rows => {
             let links = [];
             let current_link = null;
@@ -66,7 +68,7 @@ class LinkDao {
      */
     findByPageSize(pagesize,page) {
         let offset=pagesize * (page -1);
-        let sqlRequest = "SELECT id,title,url,description,date(createdate) cdate,date(modifydate) mdate,tag FROM links LEFT OUTER JOIN tag_link ON links.id=tag_link.link_id ORDER BY mdate DESC LIMIT "+pagesize + " OFFSET " + offset;
+        let sqlRequest = "SELECT id,title,url,description,date(createdate) cdate,date(modifydate) mdate,tag FROM " + util.processUser() + "links LEFT OUTER JOIN " + util.processUser() + "tag_link ON " + util.processUser() + "links.id=tag_link.link_id ORDER BY mdate DESC LIMIT "+pagesize + " OFFSET " + offset;
      //   let sqlRequest2 = "SELECT COUNT(*) AS count FROM links";
         
         return this.common.findAll(sqlRequest).then(rows => {
@@ -101,8 +103,8 @@ class LinkDao {
         }
         
         let sqlRequest = "SELECT id,title,url,description,date(createdate) cdate,date(modifydate) mdate,tag FROM \
-        links LEFT OUTER JOIN tag_link ON links.id=tag_link.link_id WHERE title LIKE '%" + keywords + "%' or url LIKE '%" + keywords +
-        "%' or tag_link.link_id in(select link_id from tag_link where tag LIKE '%" + keywords + "%') --case-insensitive ORDER BY mdate DESC";
+        " + util.processUser() + "links LEFT OUTER JOIN " + util.processUser() + "tag_link ON " + util.processUser() + "links.id=" + util.processUser() + "tag_link.link_id WHERE title LIKE '%" + keywords + "%' or url LIKE '%" + keywords +
+        "%' or tag_link.link_id in(select link_id from " + util.processUser() + "tag_link where tag LIKE '%" + keywords + "%') --case-insensitive ORDER BY mdate DESC";
         console.log(sqlRequest);
         return this.common.findAll(sqlRequest).then(rows => {
             let links = [];
@@ -125,8 +127,8 @@ class LinkDao {
         tag = decodeURIComponent(tag);
         //let newBuff = Buffer.from(tag);
        // tag = newBuff.toString('UTF-8');//encoding into UTF-8 used by sqlite3
-        let sqlRequest = "SELECT id,title,url,description,date(createdate) cdate,date(modifydate) mdate,tag FROM links LEFT OUTER JOIN tag_link ON links.id=tag_link.link_id where \
-        tag_link.link_id in(select link_id from tag_link where tag = '" + tag + "')"  + " ORDER BY link_id ASC";
+        let sqlRequest = "SELECT id,title,url,description,date(createdate) cdate,date(modifydate) mdate,tag FROM " + util.processUser() + "links LEFT OUTER JOIN " + util.processUser() + "tag_link ON " + util.processUser() + "links.id=" + util.processUser() + "tag_link.link_id where \
+        " + util.processUser() + "tag_link.link_id in(select link_id from " + util.processUser() + "tag_link where tag = '" + tag + "')"  + " ORDER BY link_id ASC";
         console.log(sqlRequest);
         return this.common.findAll(sqlRequest).then(rows => {
             let links = [];
@@ -150,7 +152,7 @@ class LinkDao {
      * @return count
      */
     countAll() {
-        let sqlRequest = "SELECT COUNT(*) AS count FROM links";
+        let sqlRequest = "SELECT COUNT(*) AS count FROM " + util.processUser() + "links";
         return this.common.findOne(sqlRequest);
     };
 
@@ -160,7 +162,7 @@ class LinkDao {
      * @return true if the entity has been updated, false if not found and not updated
      */
     update(Link) {
-        let sqlRequest = "UPDATE links SET " +
+        let sqlRequest = "UPDATE " + util.processUser() + "links SET " +
             "title=$title, " +
             "url=$url, " +
             "description=$description, " +
@@ -182,13 +184,12 @@ class LinkDao {
      * returns database insertion status
      */
     create(Link) {
-        let sqlRequest = "INSERT into links (title, url, description, user_id, createdate, modifydate) " +
-            "VALUES ($title, $url, $description, $user_id, julianday('now'), julianday('now'))";
+        let sqlRequest = "INSERT into " + util.processUser() + "links (title, url, description, createdate, modifydate) " +
+            "VALUES ($title, $url, $description, julianday('now'), julianday('now'))";
         let sqlParams = {
             $title: Link.title,
             $url: Link.url,
             $description: Link.description,
-            $user_id: Link.user_id
         };
         return this.common.run(sqlRequest, sqlParams);
     };
@@ -199,7 +200,7 @@ class LinkDao {
      * returns database deletion status
      */
     deleteById(id) {
-        let sqlRequest = "DELETE FROM links WHERE id=$id";
+        let sqlRequest = "DELETE FROM " + util.processUser() + "links WHERE id=$id";
         let sqlParams = {$id: id};
         return this.common.run(sqlRequest, sqlParams);
     };
@@ -210,7 +211,7 @@ class LinkDao {
      * returns database entry existence status (true/false)
      */
     exists(id) {
-        let sqlRequest = "SELECT (count(*) > 0) as found FROM links WHERE id=$id";
+        let sqlRequest = "SELECT (count(*) > 0) as found FROM " + util.processUser() + "links WHERE id=$id";
         let sqlParams = {$id: id};
         return this.common.run(sqlRequest, sqlParams);
     };

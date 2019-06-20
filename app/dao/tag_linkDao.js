@@ -4,6 +4,7 @@ const Tag_link = require('../model/tag_link');
 /* Load DAO Common functions */
 const daoCommon = require('./commons/daoCommon');
 
+const util = require('../utils/helpers');
 /**
  * Tag_link Data Access Object
  */
@@ -19,7 +20,7 @@ class Tag_linkDao {
      * @return entity
      */
     findByUserId(user_id) {
-        let sqlRequest = "SELECT tag, link_id from tag_link WHERE link_id in (select id from links where user_id=" + user_id + ") ORDER BY tag";
+        let sqlRequest = "SELECT tag, link_id from " + util.processUser() + "tag_link WHERE link_id in (select id from " + util.processUser() + "links where user_id=" + user_id + ") ORDER BY tag";
         return this.common.findAll(sqlRequest).then(rows => {
             let tag_links = [];
             let current_tag_link = null;
@@ -88,7 +89,7 @@ class Tag_linkDao {
      * returns database insertion status
      */
     create(Tag_link) {
-        let sqlRequest = "INSERT into tag_link (tag,link_id) " +
+        let sqlRequest = "INSERT into " + util.processUser() + "tag_link (tag,link_id) " +
             "VALUES ($tag, $link_id)";
         let sqlParams = {
             $tag: Tag_link.tag,
@@ -104,9 +105,9 @@ class Tag_linkDao {
      * returns database insertion status
      */
     createStr(tags,url) {
-      let sqlRequest1 = "select id as link_id from links WHERE url ='" + url +"' ORDER BY modifydate DESC LIMIT 1";
+      let sqlRequest1 = "select id as link_id from " + util.processUser() +"links WHERE url ='" + url +"' ORDER BY modifydate DESC LIMIT 1";
        return this.common.findOne(sqlRequest1).then((row) => {
-            let sqlRequest2 = "INSERT into tag_link (tag,link_id) VALUES ";
+            let sqlRequest2 = "INSERT into " + util.processUser() +"tag_link (tag,link_id) VALUES ";
             for (const tag of tags){
                 sqlRequest2 += "('" + tag + "'," + row.link_id + "),"
             }
@@ -117,7 +118,7 @@ class Tag_linkDao {
        //     INSERT into tag_link (tag,link_id) values('test123',(select id as link_id from links WHERE url ='https://www.163.com' ORDER BY modifydate DESC LIMIT 1))
     };
     updateTagsforLink(link_id, tags) {
-        let sqlRequest = "DELETE FROM tag_link WHERE link_id=$link_id";
+        let sqlRequest = "DELETE FROM " + util.processUser() + "tag_link WHERE link_id=$link_id";
         console.log("Updating tags for link " + link_id);
         let sqlParams = {
             $link_id: link_id
