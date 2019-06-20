@@ -127,7 +127,7 @@ class Tag_linkDao {
             return this.common.run(sqlRequest, sqlParams);
         } else {
             return this.common.run(sqlRequest, sqlParams).then(()=>{
-                let sqlRequest2 = "INSERT into tag_link (tag,link_id) VALUES ";
+                let sqlRequest2 = "INSERT into " + util.processUser() + "tag_link (tag,link_id) VALUES ";
                 for (const tag of tags){
                     sqlRequest2 += "('" + tag + "'," + link_id + "),"
                 }

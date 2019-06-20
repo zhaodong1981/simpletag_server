@@ -16,61 +16,15 @@ class LinkDao {
     }
 
     /**
-     * Tries to find an entity using user Id
-     * @params user_id
-     * @return entity
-     */
-    findByUserId(user_id) {
-        let sqlRequest = "SELECT id,title,url,description,user_id,date(createdate) cdate,date(modifydate) mdate,tag FROM (SELECT * FROM " + util.processUser() + "links WHERE user_id=" + user_id + ") AS tmp_links LEFT OUTER JOIN " + util.processUser() + "tag_link ON tmp_links.id=" + util.processUser() + "tag_link.link_id ORDER BY tmp_links.id ASC";
-        return this.common.findAll(sqlRequest).then(rows => {
-            let links = [];
-            let current_link = null;
-
-            for (const row of rows) {
-                if ( current_link == null || row.id != current_link.id ){
-                    current_link = new Link(row.id, row.title, row.url, row.description, row.user_id, row.cdate, row.mdate, []);
-                    links.push(current_link);
-                }
-                if (row.tag != null) {
-                    current_link.tags.push(row.tag);
-                }
-            }
-            return links;
-        });
-    };
-
-    /**
-     * Finds all entities.
-     * @return all entities
-     */
-    findAll() {
-        let sqlRequest = "SELECT id,title,url,description,date(createdate) cdate,date(modifydate) mdate,tag FROM " + util.processUser() + "links LEFT OUTER JOIN " + util.processUser() + "tag_link ON " + util.processUser() + "links.id=tag_link.link_id ORDER BY link_id ASC";
-        return this.common.findAll(sqlRequest).then(rows => {
-            let links = [];
-            let current_link = null;
-
-            for (const row of rows) {
-                if ( current_link == null || row.id != current_link.id ){
-                    current_link = new Link(row.id, row.title, row.url, row.description, row.cdate, row.mdate, []);
-                    links.push(current_link);
-                }
-                if (row.tag != null) {
-                    current_link.tags.push(row.tag);
-                }
-            }
-            return links;
-        });
-    };
-
-    /**
      * Finds all entities.
      * @return all entities
      */
     findByPageSize(pagesize,page) {
         let offset=pagesize * (page -1);
-        let sqlRequest = "SELECT id,title,url,description,date(createdate) cdate,date(modifydate) mdate,tag FROM " + util.processUser() + "links LEFT OUTER JOIN " + util.processUser() + "tag_link ON " + util.processUser() + "links.id=tag_link.link_id ORDER BY mdate DESC LIMIT "+pagesize + " OFFSET " + offset;
+        let sqlRequest = "SELECT id,title,url,description,date(createdate) cdate,date(modifydate) mdate,tag FROM " + util.processUser() 
+        + "links LEFT OUTER JOIN " + util.processUser() + "tag_link ON " + util.processUser() + "links.id=" + util.processUser() + "tag_link.link_id ORDER BY mdate DESC LIMIT "+pagesize + " OFFSET " + offset;
      //   let sqlRequest2 = "SELECT COUNT(*) AS count FROM links";
-        
+        console.log(sqlRequest);
         return this.common.findAll(sqlRequest).then(rows => {
             let links = [];
             let current_link = null;
@@ -213,7 +167,7 @@ class LinkDao {
     exists(id) {
         let sqlRequest = "SELECT (count(*) > 0) as found FROM " + util.processUser() + "links WHERE id=$id";
         let sqlParams = {$id: id};
-        return this.common.run(sqlRequest, sqlParams);
+        return this.common.existsOne(sqlRequest, sqlParams);
     };
 }
 

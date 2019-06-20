@@ -25,18 +25,9 @@ router.get('/exists/:id', function (req, res) {
     linkController.exists(req, res);
 });
 
-router.get('/:user_id', function (req, res) {
-    linkController.findByUserId(req, res);
-});
-
 router.get('/', function (req, res) {
   //  linkController.findAll(res);
     linkController.findByPageSize(req,res);
-});
-
-router.get('/page', function (req, res) {
-    console.log("paging 0... ");
-    linkController.findByPageOffset(req,res);
 });
 
 router.put('/:id', function (req, res) {

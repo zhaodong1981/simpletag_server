@@ -21,39 +21,18 @@ class LinkController {
     }
 
     /**
-     * Tries to find an entity using its Id / Primary Key
-     * @params req, res
-     * @return entity
-     */
-    findByUserId(req, res) {
-        let user_id = req.params.user_id;
-
-        this.linkDao.findByUserId(user_id)
-            .then(this.common.findSuccess(res))
-            .catch(this.common.findError(res));
-    };
-
-    /**
-     * Finds all entities.
-     * @return all entities
-     */
-    findAll(res) {
-        this.linkDao.findAll()
-            .then(this.common.findSuccess(res))
-            .catch(this.common.findError(res));
-    };
-
-    /**
      * Finds all entities.
      * @return all entities
      */
     findByPageSize(req,res) {
+
         let pagesize = req.query.per_page;
         let page = req.query.page;
         if (typeof pagesize === 'undefined'){
             pagesize =-1;
             page =1;
         }
+        console.log("findByPageSize " + pagesize);
         this.linkDao.findByPageSize(pagesize,page)
             .then(this.common.findSuccess(res))
             .catch(this.common.findError(res));
