@@ -51,12 +51,14 @@ class Common {
             let stmt = database.db.prepare(sqlRequest);
             stmt.each(sqlParams, function (err, row) {
                 if (err) {
+                    console.log("Error in exists one " + err);
                     reject(
                         new DaoError(20, "Internal server error")
                     );
                 } else if (row && row.found === 1) {
                     resolve(true);
                 } else {
+                    console.log("Error in exists one, row != 1");
                     reject(
                         new DaoError(21, "Entity not found")
                     );
@@ -69,21 +71,16 @@ class Common {
         return new Promise(function (resolve, reject) {
             let stmt = database.db.prepare(sqlRequest);
             stmt.run(sqlParams, function (err) {
-                if (this.changes === 1) {
-                    resolve(true);
-                } else if (this.changes === 0) {
-                    //reject(
-                     //   new DaoError(21, "Entity not found")
-                    //)
-                    console.log(err);
-                    resolve(true);
+                if (err) {
+                    console.error("Error daoCommon.run: " + err);
+                    reject(
+                        new DaoError(20, err)
+                    );
                 } else {
+                    console.log("daoCommon.run: records updated: " + this.changes );
                     resolve(true);
-                    console.log(err);
-                  //  reject(
-                  //      new DaoError(11, "Invalid arguments")
-                   // )
                 }
+              
             })
         });
     }
