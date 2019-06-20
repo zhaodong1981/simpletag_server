@@ -30,6 +30,11 @@ router.post('/login', function (req, res) {
     } else {
       res.send('Bad username or password');
     }
-  });
+});
+
+router.get('/logout', function (req, res) {
+    delete req.session.user_id;
+    res.redirect('/login');
+});      
 
 module.exports = router;
