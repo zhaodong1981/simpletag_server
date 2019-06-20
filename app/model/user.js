@@ -3,8 +3,7 @@
  */
 
 class User {
-    constructor(id, username, password, firstname, lastname, schema) {
-        this.id = id;
+    constructor(username, password, firstname, lastname, schema) {
         this.username = username;
         this.password = password;
         this.firstname = firstname;

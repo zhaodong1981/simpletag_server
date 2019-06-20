@@ -18,37 +18,16 @@ class UserController {
     }
 
     /**
-     * Tries to find an entity using its Id / Primary Key
+     * Tries to find an entity using its Username / Primary Key
      * @params req, res
      * @return entity
      */
-    findById(req, res) {
-        let id = req.params.id;
+    findByUsername(req, res) {
+        let username = req.params.username;
 
-        this.userDao.findById(id)
+        this.userDao.findByUsername(username)
             .then(this.common.findSuccess(res))
             .catch(this.common.findError(res));
-    };
-
-    /**
-     * Finds all entities.
-     * @return all entities
-     */
-    findAll(res) {
-        this.userDao.findAll()
-            .then(this.common.findSuccess(res))
-            .catch(this.common.findError(res));
-    };
-
-    /**
-     * Counts all the records present in the database
-     * @return count
-     */
-    countAll(res) {
-
-        this.userDao.countAll()
-            .then(this.common.findSuccess(res))
-            .catch(this.common.serverError(res));
     };
 
     /**
@@ -58,9 +37,7 @@ class UserController {
      */
     update(req, res) {
         let user = new User();
-        user.id = req.body.id;
         user.username = req.body.username;
-        user.password = req.body.password;
         user.firstname = req.body.firstname;
         user.lastname = req.body.lastname;
 
@@ -80,6 +57,7 @@ class UserController {
         user.password = req.body.password;
         user.firstname = req.body.firstname;
         user.lastname = req.body.lastname;
+        user.schema = user.username;
 
         return this.userDao.create(user)
             .then(this.common.editSuccess(res))
@@ -88,27 +66,14 @@ class UserController {
     };
 
     /**
-     * Deletes an entity using its Id / Primary Key
-     * @params req, res
-     * returns database deletion status
-     */
-    deleteById(req, res) {
-        let id = req.params.id;
-
-        this.userDao.deleteById(id)
-            .then(this.common.editSuccess(res))
-            .catch(this.common.serverError(res));
-    };
-
-    /**
-     * Returns true if an entity exists with the given Id / Primary Key
+     * Returns true if an entity exists with the given Username / Primary Key
      * @params req, res
      * @return
      */
     exists(req, res) {
-        let id = req.params.id;
+        let username = req.params.username;
 
-        this.userDao.exists(id)
+        this.userDao.exists(username)
             .then(this.common.existsSuccess(res))
             .catch(this.common.findError(res));
     };

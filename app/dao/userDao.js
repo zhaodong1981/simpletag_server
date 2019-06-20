@@ -14,39 +14,15 @@ class UserDao {
     }
 
     /**
-     * Tries to find an entity using its Id / Primary Key
-     * @params id
+     * Tries to find an entity using its username / Primary Key
+     * @params username
      * @return entity
      */
-    findById(id) {
-        let sqlRequest = "SELECT id, username, password, firstname, lastname FROM users WHERE id=$id";
-        let sqlParams = {$id: id};
+    findByUsername(username) {
+        let sqlRequest = "SELECT username, firstname, lastname, schema FROM users WHERE username=$username";
+        let sqlParams = {$username: username};
         return this.common.findOne(sqlRequest, sqlParams).then(row =>
-            new User(row.id, row.username, row.password, row.firstname, row.lastname));
-    };
-
-    /**
-     * Finds all entities.
-     * @return all entities
-     */
-    findAll() {
-        let sqlRequest = "SELECT * FROM users";
-        return this.common.findAll(sqlRequest).then(rows => {
-            let users = [];
-            for (const row of rows) {
-                users.push(new User(row.id, row.username, row.password, row.firstname, row.lastname));
-            }
-            return users;
-        });
-    };
-
-    /**
-     * Counts all the records present in the database
-     * @return count
-     */
-    countAll() {
-        let sqlRequest = "SELECT COUNT(*) AS count FROM users";
-        return this.common.findOne(sqlRequest);
+            new User(row.username, '', row.firstname, row.lastname,row.schema));
     };
 
     /**
@@ -60,26 +36,8 @@ class UserDao {
             "password=$password, " +
             "firstname=$firstname, " +
             "lastname=$lastname " +
-            "WHERE id=$id";
+            "WHERE username=$username";
 
-        let sqlParams = {
-            $username: User.username,
-            $password: User.password,
-            $firstname: User.firstname,
-            $lastname: User.lastname,
-            $id: User.id
-        };
-        return this.common.run(sqlRequest, sqlParams);
-    };
-
-    /**
-     * Creates the given entity in the database
-     * @params User
-     * returns database insertion status
-     */
-    create(User) {
-        let sqlRequest = "INSERT into users (username, password, firstname, lastname) " +
-            "VALUES ($username, $password, $firstname, $lastname)";
         let sqlParams = {
             $username: User.username,
             $password: User.password,
@@ -90,25 +48,32 @@ class UserDao {
     };
 
     /**
-     * Deletes an entity using its Id / Primary Key
-     * @params id
-     * returns database deletion status
+     * Creates the given entity in the database
+     * @params User
+     * returns database insertion status
      */
-    deleteById(id) {
-        let sqlRequest = "DELETE FROM users WHERE id=$id";
-        let sqlParams = {$id: id};
+    create(User) {
+        let sqlRequest = "INSERT into users (username, password, firstname, lastname,schema) " +
+            "VALUES ($username, $password, $firstname, $lastname,$schema)";
+        let sqlParams = {
+            $username: User.username,
+            $password: User.password,
+            $firstname: User.firstname,
+            $lastname: User.lastname,
+            $schema: User.schema + '_'
+        };
         return this.common.run(sqlRequest, sqlParams);
     };
 
     /**
-     * Returns true if an entity exists with the given Id / Primary Key
-     * @params id
+     * Returns true if an entity exists with the given username / Primary Key
+     * @params username
      * returns database entry existence status (true/false)
      */
-    exists(id) {
-        let sqlRequest = "SELECT (count(*) > 0) as found FROM users WHERE id=$id";
-        let sqlParams = {$id: id};
-        return this.common.run(sqlRequest, sqlParams);
+    exists(username) {
+        let sqlRequest = "SELECT (count(*) > 0) as found FROM users WHERE username=$username";
+        let sqlParams = {$username: username};
+        return this.common.existsOne(sqlRequest, sqlParams);
     };
 }
 
