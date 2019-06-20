@@ -18,19 +18,6 @@ class Tag_linkController {
     }
 
     /**
-     * Tries to find an entity using its Id / Primary Key
-     * @params req, res
-     * @return entity
-     */
-    findByUserId(req, res) {
-        let user_id = req.params.user_id;
-
-        this.tag_linkDao.findByUserId(user_id)
-            .then(this.common.findSuccess(res))
-            .catch(this.common.findError(res));
-    };
-
-    /**
      * Finds all entities.
      * @return all entities
      */

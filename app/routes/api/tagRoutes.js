@@ -6,10 +6,6 @@ const router = express.Router();
 const Tag_linkController = require('../../controller/tag_linkController');
 const tag_linkController = new Tag_linkController();
 
-router.get('/:user_id', function (req, res) {
-    tag_linkController.findByUserId(req, res);
-});
-
 router.get('/', function (req, res) {
     tag_linkController.findAll(res);
 });

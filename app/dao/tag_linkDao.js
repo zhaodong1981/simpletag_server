@@ -15,33 +15,11 @@ class Tag_linkDao {
     }
 
     /**
-     * Tries to find an entity using its Id / Primary Key
-     * @params id
-     * @return entity
-     */
-    findByUserId(user_id) {
-        let sqlRequest = "SELECT tag, link_id from " + util.processUser() + "tag_link WHERE link_id in (select id from " + util.processUser() + "links where user_id=" + user_id + ") ORDER BY tag";
-        return this.common.findAll(sqlRequest).then(rows => {
-            let tag_links = [];
-            let current_tag_link = null;
-            for (const row of rows) {         
-               if ( current_tag_link === null || row.tag !== current_tag_link.tag ){
-                    current_tag_link = {"tag": row.tag, "links": []};
-                    tag_links.push(current_tag_link);
-                }
-                current_tag_link.links.push(row.link_id);
-                
-            }
-            return tag_links;
-        });
-    };
-
-    /**
      * Finds all entities.
      * @return all entities
      */
     findAll() {
-        let sqlRequest = "SELECT * FROM tag_link ORDER BY tag";
+        let sqlRequest = "SELECT * FROM "+ util.processUser() + "tag_link ORDER BY tag";
         return this.common.findAll(sqlRequest).then(rows => {
             let tag_links = [];
             let current_tag_link = null;
@@ -62,7 +40,7 @@ class Tag_linkDao {
      * @return count
      */
     countAll() {
-        let sqlRequest = "SELECT COUNT(*) AS count FROM tag_link";
+        let sqlRequest = "SELECT COUNT(*) AS count FROM "+ util.processUser() + "tag_link";
         return this.common.findOne(sqlRequest);
     };
 
@@ -72,7 +50,7 @@ class Tag_linkDao {
      * @return true if the entity has been updated, false if not found and not updated
      */
     update(Tag_link) {
-        let sqlRequest = "UPDATE tag_link SET " +
+        let sqlRequest = "UPDATE "+ util.processUser() + "tag_link SET " +
             "tag=$tag, " +
             "link_id=$link_id";
 
@@ -144,7 +122,7 @@ class Tag_linkDao {
      * returns database deletion status
      */
     deleteByLinkId(link_id) {
-        let sqlRequest = "DELETE FROM tag_link WHERE link_id=$link_id";
+        let sqlRequest = "DELETE FROM "+ util.processUser() + "tag_link WHERE link_id=$link_id";
         let sqlParams = {$link_id: link_id};
         return this.common.run(sqlRequest, sqlParams);
     };
@@ -155,7 +133,7 @@ class Tag_linkDao {
      * returns database deletion status
      */
     deleteTag(tag,link_id) {
-        let sqlRequest = "DELETE FROM tag_link WHERE link_id=$link_id AND tag=$tag";
+        let sqlRequest = "DELETE FROM "+ util.processUser() + "tag_link WHERE link_id=$link_id AND tag=$tag";
         let sqlParams = {
             $link_id: link_id,
             $tag: tag
