@@ -104,7 +104,7 @@ class LinkDao {
         
         let sqlRequest = "SELECT id,title,url,description,date(createdate) cdate,date(modifydate) mdate,tag FROM \
         " + util.processUser() + "links LEFT OUTER JOIN " + util.processUser() + "tag_link ON " + util.processUser() + "links.id=" + util.processUser() + "tag_link.link_id WHERE title LIKE '%" + keywords + "%' or url LIKE '%" + keywords +
-        "%' or tag_link.link_id in(select link_id from " + util.processUser() + "tag_link where tag LIKE '%" + keywords + "%') --case-insensitive ORDER BY mdate DESC";
+        "%' or " + util.processUser() + "tag_link.link_id in(select link_id from " + util.processUser() + "tag_link where tag LIKE '%" + keywords + "%') --case-insensitive ORDER BY mdate DESC";
         console.log(sqlRequest);
         return this.common.findAll(sqlRequest).then(rows => {
             let links = [];
