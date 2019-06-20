@@ -4,11 +4,12 @@
   "description": "server of the simple tag app",
   "author": "Dong Zhao https://github.com/zhaodong1981)",
   "dependencies": {
+    "bluebird": "*",
     "body-parser": "*",
     "ejs": "*",
     "express": "*",
-    "sqlite": "*",
-    "bluebird": "*"
+    "express-session": "^1.16.2",
+    "sqlite": "*"
   },
   "license": "LGPL-3.0",
   "bugs": {
