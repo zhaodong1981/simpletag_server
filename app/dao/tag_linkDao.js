@@ -69,10 +69,10 @@ class Tag_linkDao {
     create(Tag_link) {
         let sqlRequest = "INSERT into " + util.processUser() + "tag_link (tag,link_id) " +
             "VALUES ($tag, $link_id)";
-        let sqlParams = {
-            $tag: Tag_link.tag,
-            $link_id: Tag_link.link_id
-        };
+            let sqlParams = {
+                $tag: Tag_link.tag,
+                $link_id: Tag_link.link_id
+            };
         return this.common.run(sqlRequest, sqlParams);
     };
 
