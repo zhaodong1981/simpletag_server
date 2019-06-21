@@ -1,10 +1,15 @@
+
+//make node.js require relative to your project root
+//https://www.npmjs.com/package/rootpath
+require('rootpath')();
+
 /* Load modules */
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 
 /* Database configuration */
-const database = require('./app/config/dbconfig');
+const database = require('app/config/dbconfig');
 
 /* Init database */
 database.init();
