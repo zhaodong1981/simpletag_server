@@ -3,6 +3,8 @@
  */
 const express = require('express');
 const router = express.Router();
+
+/*
 const uuid = require('uuid/v4')
 const session = require('express-session')
 
@@ -17,7 +19,7 @@ router.use(session({
     resave: false,
     saveUninitialized: true
   }))
-  
+*/
 
 /* API routes */
 router.use('/user', require('./api/userRoutes'));

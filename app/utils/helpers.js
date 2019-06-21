@@ -5,6 +5,7 @@ let processUser = function (username) {
     return username + "_";
 };
 
+/*
 let checkAuth = function (req, res, next) {
     if (!req.session.user_id) {
       res.status(401).send('Not authorized');
@@ -12,9 +13,9 @@ let checkAuth = function (req, res, next) {
       next();
     }
 };
+*/
 
 module.exports = {
-    checkAuth: checkAuth,
     processUser: processUser
 };
 

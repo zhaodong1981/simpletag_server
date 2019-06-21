@@ -22,6 +22,7 @@ router.post('/create', function (req, res) {
     userController.create(req, res);
 });
 
+/*
 router.post('/login', function (req, res) {
     var post = req.body;
     if (post.user === 'dzhao' && post.password === 'password') {
@@ -36,5 +37,6 @@ router.get('/logout', function (req, res) {
     delete req.session.user_id;
     res.redirect('/login');
 });      
+*/
 
 module.exports = router;
