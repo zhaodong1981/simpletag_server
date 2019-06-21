@@ -8,7 +8,6 @@
     "body-parser": "*",
     "ejs": "*",
     "express": "*",
-    "express-session": "^1.16.2",
     "sqlite": "*"
   },
   "license": "LGPL-3.0",
