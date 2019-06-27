@@ -20,7 +20,7 @@ router.put('/:username', function (req, res) {
 });
 
 router.post('/create', function (req, res) {
-    userController.create(req, res);
+    userController.create(req, res, userService);
 });
 
 /*
@@ -42,19 +42,10 @@ router.get('/logout', function (req, res) {
 
 router.post('/authenticate', authenticate);
 
-router.get('/', getAll);
-
 function authenticate(req, res, next) {
-    userService.authenticate(req.body)
+    userController.getAllUsers().then(users => userService.authenticate(users,req.body))
         .then(user => user ? res.json(user) : res.status(400).json({ message: 'Username or password is incorrect' }))
         .catch(err => next(err));
 }
-
-function getAll(req, res, next) {
-    userService.getAll()
-        .then(users => res.json(users))
-        .catch(err => next(err));
-}
-
 
 module.exports = router;

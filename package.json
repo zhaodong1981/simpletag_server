@@ -4,6 +4,7 @@
   "description": "server of the simple tag app",
   "author": "Dong Zhao https://github.com/zhaodong1981)",
   "dependencies": {
+    "bcrypt": "^3.0.6",
     "bluebird": "*",
     "body-parser": "*",
     "cors": "^2.8.5",

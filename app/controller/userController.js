@@ -7,6 +7,10 @@ const ControllerCommon = require('./common/controllerCommon');
 /* Load User entity */
 const User = require('../model/user');
 
+/* load lib to hash password */
+
+const bcrypt = require('bcrypt');
+
 /**
  * User Controller
  */
@@ -30,6 +34,15 @@ class UserController {
             .catch(this.common.findError(res));
     };
 
+     /**
+     * Get all users
+     * @return users
+     */
+    getAllUsers() {
+       return this.userDao.getAllUsers();
+    };
+
+
     /**
      * Updates the given entity in the database
      * @params req, res
@@ -51,10 +64,11 @@ class UserController {
      * @params req, res
      * returns database insertion status
      */
-    create(req, res) {
+    create(req, res, userservice) {
         let user = new User();
+        let hash = bcrypt.hashSync(req.body.password, 10);
         user.username = req.body.username;
-        user.password = req.body.password;
+        user.password = hash; // store the hash, not the password
         user.firstname = req.body.firstname;
         user.lastname = req.body.lastname;
         user.schema = user.username;

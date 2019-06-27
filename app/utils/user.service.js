@@ -1,29 +1,30 @@
 ﻿const config = require('config.json');
 const jwt = require('jsonwebtoken');
-
-// users hardcoded for simplicity, store in a db for production applications
-const users = [{ id: 1, username: 'test', password: 'test', firstName: 'Test', lastName: 'User' }];
+const bcrypt = require('bcrypt');
+const UserDao = require('../dao/userDao');
 
 module.exports = {
-    authenticate,
-    getAll
+    authenticate
 };
 
-async function authenticate({ username, password }) {
-    const user = users.find(u => u.username === username && u.password === password);
-    if (user) {
+async function authenticate(users,{ username, password }) {
+    console.log("all users: " + JSON.stringify(users));
+    const user = users.find(u => u.username === username);
+    if (user){
+        console.log("user found");
+    }else {
+        console.log("User not found");
+    }
+    if (user && bcrypt.compareSync(password, user.password)) {
+        console.log("Password matches");
         const token = jwt.sign({ sub: user.id }, config.secret);
         const { password, ...userWithoutPassword } = user;
         return {
             ...userWithoutPassword,
             token
         };
-    }
-}
-
-async function getAll() {
-    return users.map(u => {
-        const { password, ...userWithoutPassword } = u;
-        return userWithoutPassword;
-    });
+    } else{
+        console.log("Invalid password");
+    };
+    
 }

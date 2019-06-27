@@ -25,6 +25,24 @@ class UserDao {
             new User(row.username, '', row.firstname, row.lastname,row.schema));
     };
 
+     /**
+     * Find all users
+     * @params 
+     * @return all users
+     */
+    getAllUsers() {
+        let sqlRequest = "SELECT username, password, firstname, lastname, schema FROM users";
+        return this.common.findAll(sqlRequest).then(rows => {
+            let users = [];
+            for (const row of rows) {
+                users.push(new User(row.username, row.password, row.firstname, row.lastname,row.schema));
+            }
+            return users;
+           
+        });
+    };
+
+
     /**
      * Updates the given entity in the database
      * @params User
