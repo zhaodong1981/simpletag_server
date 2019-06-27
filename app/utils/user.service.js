@@ -17,7 +17,7 @@ async function authenticate(users,{ username, password }) {
     }
     if (user && bcrypt.compareSync(password, user.password)) {
         console.log("Password matches");
-        const token = jwt.sign({ sub: user.id }, config.secret);
+        const token = jwt.sign({ sub: user.username }, config.secret);
         const { password, ...userWithoutPassword } = user;
         return {
             ...userWithoutPassword,
