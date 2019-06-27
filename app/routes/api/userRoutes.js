@@ -23,23 +23,6 @@ router.post('/create', function (req, res) {
     userController.create(req, res, userService);
 });
 
-/*
-router.post('/login', function (req, res) {
-    var post = req.body;
-    if (post.user === 'dzhao' && post.password === 'password') {
-      req.session.user_id = "dzhao_12345";
-      res.send('Login succeeded');
-    } else {
-      res.send('Bad username or password');
-    }
-});
-
-router.get('/logout', function (req, res) {
-    delete req.session.user_id;
-    res.redirect('/login');
-});      
-*/
-
 router.post('/authenticate', authenticate);
 
 function authenticate(req, res, next) {
