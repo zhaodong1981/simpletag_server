@@ -7,7 +7,7 @@ const Tag_linkController = require('../../controller/tag_linkController');
 const tag_linkController = new Tag_linkController();
 
 router.get('/', function (req, res) {
-    tag_linkController.findAll(res);
+    tag_linkController.findAll(req, res);
 });
 
 router.post('/create', function (req, res) {

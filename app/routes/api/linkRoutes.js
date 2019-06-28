@@ -10,7 +10,7 @@ const linkController = new LinkController();
  * Link Entity routes
  */
 router.get('/count', function (req, res) {
-    linkController.countAll(res);
+    linkController.countAll(req,res);
 });
 
 /**

@@ -19,10 +19,10 @@ class LinkDao {
      * Finds all entities.
      * @return all entities
      */
-    findByPageSize(pagesize,page) {
+    findByPageSize(pagesize,page,req) {
         let offset=pagesize * (page -1);
-        let sqlRequest = "SELECT id,title,url,description,date(createdate) cdate,date(modifydate) mdate,tag FROM " + util.processUser() 
-        + "links LEFT OUTER JOIN " + util.processUser() + "tag_link ON " + util.processUser() + "links.id=" + util.processUser() + "tag_link.link_id ORDER BY mdate DESC LIMIT "+pagesize + " OFFSET " + offset;
+        let sqlRequest = "SELECT id,title,url,description,date(createdate) cdate,date(modifydate) mdate,tag FROM " + util.processUser(req) 
+        + "links LEFT OUTER JOIN " + util.processUser(req) + "tag_link ON " + util.processUser(req) + "links.id=" + util.processUser(req) + "tag_link.link_id ORDER BY mdate DESC LIMIT "+pagesize + " OFFSET " + offset;
      //   let sqlRequest2 = "SELECT COUNT(*) AS count FROM links";
         console.log(sqlRequest);
         return this.common.findAll(sqlRequest).then(rows => {
@@ -48,7 +48,7 @@ class LinkDao {
     };
 
 
-    findByKeywords(keywords){
+    findByKeywords(keywords,req){
         if (typeof keywords != 'undefined'){
           console.log(" converting " + keywords );
           keywords = decodeURIComponent(keywords);
@@ -57,8 +57,8 @@ class LinkDao {
         }
         
         let sqlRequest = "SELECT id,title,url,description,date(createdate) cdate,date(modifydate) mdate,tag FROM \
-        " + util.processUser() + "links LEFT OUTER JOIN " + util.processUser() + "tag_link ON " + util.processUser() + "links.id=" + util.processUser() + "tag_link.link_id WHERE title LIKE '%" + keywords + "%' or url LIKE '%" + keywords +
-        "%' or " + util.processUser() + "tag_link.link_id in(select link_id from " + util.processUser() + "tag_link where tag LIKE '%" + keywords + "%') --case-insensitive ORDER BY mdate DESC";
+        " + util.processUser(req) + "links LEFT OUTER JOIN " + util.processUser(req) + "tag_link ON " + util.processUser(req) + "links.id=" + util.processUser(req) + "tag_link.link_id WHERE title LIKE '%" + keywords + "%' or url LIKE '%" + keywords +
+        "%' or " + util.processUser(req) + "tag_link.link_id in(select link_id from " + util.processUser(req) + "tag_link where tag LIKE '%" + keywords + "%') --case-insensitive ORDER BY mdate DESC";
         console.log(sqlRequest);
         return this.common.findAll(sqlRequest).then(rows => {
             let links = [];
@@ -77,12 +77,12 @@ class LinkDao {
 
     }
 
-    findByTag(tag) {
+    findByTag(tag,req) {
         tag = decodeURIComponent(tag);
         //let newBuff = Buffer.from(tag);
        // tag = newBuff.toString('UTF-8');//encoding into UTF-8 used by sqlite3
-        let sqlRequest = "SELECT id,title,url,description,date(createdate) cdate,date(modifydate) mdate,tag FROM " + util.processUser() + "links LEFT OUTER JOIN " + util.processUser() + "tag_link ON " + util.processUser() + "links.id=" + util.processUser() + "tag_link.link_id where \
-        " + util.processUser() + "tag_link.link_id in(select link_id from " + util.processUser() + "tag_link where tag = '" + tag + "')"  + " ORDER BY link_id ASC";
+        let sqlRequest = "SELECT id,title,url,description,date(createdate) cdate,date(modifydate) mdate,tag FROM " + util.processUser(req) + "links LEFT OUTER JOIN " + util.processUser(req) + "tag_link ON " + util.processUser(req) + "links.id=" + util.processUser(req) + "tag_link.link_id where \
+        " + util.processUser(req) + "tag_link.link_id in(select link_id from " + util.processUser(req) + "tag_link where tag = '" + tag + "')"  + " ORDER BY link_id ASC";
         console.log(sqlRequest);
         return this.common.findAll(sqlRequest).then(rows => {
             let links = [];
@@ -105,8 +105,8 @@ class LinkDao {
      * Counts all the records present in the database
      * @return count
      */
-    countAll() {
-        let sqlRequest = "SELECT COUNT(*) AS count FROM " + util.processUser() + "links";
+    countAll(req) {
+        let sqlRequest = "SELECT COUNT(*) AS count FROM " + util.processUser(req) + "links";
         return this.common.findOne(sqlRequest);
     };
 
@@ -115,8 +115,8 @@ class LinkDao {
      * @params Link
      * @return true if the entity has been updated, false if not found and not updated
      */
-    update(Link) {
-        let sqlRequest = "UPDATE " + util.processUser() + "links SET " +
+    update(Link,req) {
+        let sqlRequest = "UPDATE " + util.processUser(req) + "links SET " +
             "title=$title, " +
             "url=$url, " +
             "description=$description, " +
@@ -137,8 +137,8 @@ class LinkDao {
      * @params Link
      * returns database insertion status
      */
-    create(Link) {
-        let sqlRequest = "INSERT into " + util.processUser() + "links (title, url, description, createdate, modifydate) " +
+    create(Link,req) {
+        let sqlRequest = "INSERT into " + util.processUser(req) + "links (title, url, description, createdate, modifydate) " +
             "VALUES ($title, $url, $description, julianday('now'), julianday('now'))";
         let sqlParams = {
             $title: Link.title,
@@ -153,8 +153,8 @@ class LinkDao {
      * @params id
      * returns database deletion status
      */
-    deleteById(id) {
-        let sqlRequest = "DELETE FROM " + util.processUser() + "links WHERE id=$id";
+    deleteById(id,req) {
+        let sqlRequest = "DELETE FROM " + util.processUser(req) + "links WHERE id=$id";
         let sqlParams = {$id: id};
         return this.common.run(sqlRequest, sqlParams);
     };
@@ -164,8 +164,8 @@ class LinkDao {
      * @params id
      * returns database entry existence status (true/false)
      */
-    exists(id) {
-        let sqlRequest = "SELECT (count(*) > 0) as found FROM " + util.processUser() + "links WHERE id=$id";
+    exists(id,req) {
+        let sqlRequest = "SELECT (count(*) > 0) as found FROM " + util.processUser(req) + "links WHERE id=$id";
         let sqlParams = {$id: id};
         return this.common.existsOne(sqlRequest, sqlParams);
     };

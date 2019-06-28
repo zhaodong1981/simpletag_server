@@ -21,7 +21,7 @@ class Tag_linkController {
      * Finds all entities.
      * @return all entities
      */
-    findAll(res) {
+    findAll(req, res) {
         this.tag_linkDao.findAll()
             .then(this.common.findSuccess(res))
             .catch(this.common.findError(res));
@@ -31,9 +31,9 @@ class Tag_linkController {
      * Counts all the records present in the database
      * @return count
      */
-    countAll(res) {
+    countAll(req, res) {
 
-        this.tag_linkDao.countAll()
+        this.tag_linkDao.countAll(req)
             .then(this.common.findSuccess(res))
             .catch(this.common.serverError(res));
     };
@@ -63,7 +63,7 @@ class Tag_linkController {
     deleteByLinkId(req, res) {
         let link_id = req.params.link_id;
 
-        this.tag_linkDao.deleteByLinkId(link_id)
+        this.tag_linkDao.deleteByLinkId(link_id, req)
             .then(this.common.editSuccess(res))
             .catch(this.common.serverError(res));
     };
@@ -79,7 +79,7 @@ class Tag_linkController {
         let tag = req.params.tag;
         console.log("link_id="+link_id+",tag="+tag);
 
-        this.tag_linkDao.deleteTag(tag,link_id)
+        this.tag_linkDao.deleteTag(tag,link_id, req)
             .then(this.common.editSuccess(res))
             .catch(this.common.serverError(res));
     };
@@ -92,7 +92,7 @@ class Tag_linkController {
         let link_id = req.params.link_id;
         let tag = req.params.tag;
 
-        this.tag_linkDao.exists(link_id,tag)
+        this.tag_linkDao.exists(link_id,tag, req)
             .then(this.common.existsSuccess(res))
             .catch(this.common.findError(res));
     };

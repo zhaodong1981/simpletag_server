@@ -18,8 +18,8 @@ class Tag_linkDao {
      * Finds all entities.
      * @return all entities
      */
-    findAll() {
-        let sqlRequest = "SELECT * FROM "+ util.processUser() + "tag_link ORDER BY tag";
+    findAll(req) {
+        let sqlRequest = "SELECT * FROM "+ util.processUser(req) + "tag_link ORDER BY tag";
         return this.common.findAll(sqlRequest).then(rows => {
             let tag_links = [];
             let current_tag_link = null;
@@ -39,8 +39,8 @@ class Tag_linkDao {
      * Counts all the records present in the database
      * @return count
      */
-    countAll() {
-        let sqlRequest = "SELECT COUNT(*) AS count FROM "+ util.processUser() + "tag_link";
+    countAll(req) {
+        let sqlRequest = "SELECT COUNT(*) AS count FROM "+ util.processUser(req) + "tag_link";
         return this.common.findOne(sqlRequest);
     };
 
@@ -49,8 +49,8 @@ class Tag_linkDao {
      * @params Tag_link
      * @return true if the entity has been updated, false if not found and not updated
      */
-    update(Tag_link) {
-        let sqlRequest = "UPDATE "+ util.processUser() + "tag_link SET " +
+    update(Tag_link,req) {
+        let sqlRequest = "UPDATE "+ util.processUser(req) + "tag_link SET " +
             "tag=$tag, " +
             "link_id=$link_id";
 
@@ -66,8 +66,8 @@ class Tag_linkDao {
      * @params Tag_link
      * returns database insertion status
      */
-    create(Tag_link) {
-        let sqlRequest = "INSERT into " + util.processUser() + "tag_link (tag,link_id) " +
+    create(Tag_link,req) {
+        let sqlRequest = "INSERT into " + util.processUser(req) + "tag_link (tag,link_id) " +
             "VALUES ($tag, $link_id)";
             let sqlParams = {
                 $tag: Tag_link.tag,
@@ -82,10 +82,10 @@ class Tag_linkDao {
      * @params url
      * returns database insertion status
      */
-    createStr(tags,url) {
-      let sqlRequest1 = "select id as link_id from " + util.processUser() +"links WHERE url ='" + url +"' ORDER BY modifydate DESC LIMIT 1";
+    createStr(tags,url,req) {
+      let sqlRequest1 = "select id as link_id from " + util.processUser(req) +"links WHERE url ='" + url +"' ORDER BY modifydate DESC LIMIT 1";
        return this.common.findOne(sqlRequest1).then((row) => {
-            let sqlRequest2 = "INSERT into " + util.processUser() +"tag_link (tag,link_id) VALUES ";
+            let sqlRequest2 = "INSERT into " + util.processUser(req) +"tag_link (tag,link_id) VALUES ";
             for (const tag of tags){
                 sqlRequest2 += "('" + tag + "'," + row.link_id + "),"
             }
@@ -95,8 +95,8 @@ class Tag_linkDao {
         
        //     INSERT into tag_link (tag,link_id) values('test123',(select id as link_id from links WHERE url ='https://www.163.com' ORDER BY modifydate DESC LIMIT 1))
     };
-    updateTagsforLink(link_id, tags) {
-        let sqlRequest = "DELETE FROM " + util.processUser() + "tag_link WHERE link_id=$link_id";
+    updateTagsforLink(link_id, tags, req) {
+        let sqlRequest = "DELETE FROM " + util.processUser(req) + "tag_link WHERE link_id=$link_id";
         console.log("Updating tags for link " + link_id);
         let sqlParams = {
             $link_id: link_id
@@ -105,7 +105,7 @@ class Tag_linkDao {
             return this.common.run(sqlRequest, sqlParams);
         } else {
             return this.common.run(sqlRequest, sqlParams).then(()=>{
-                let sqlRequest2 = "INSERT into " + util.processUser() + "tag_link (tag,link_id) VALUES ";
+                let sqlRequest2 = "INSERT into " + util.processUser(req) + "tag_link (tag,link_id) VALUES ";
                 for (const tag of tags){
                     sqlRequest2 += "('" + tag + "'," + link_id + "),"
                 }
@@ -121,8 +121,8 @@ class Tag_linkDao {
      * @params id
      * returns database deletion status
      */
-    deleteByLinkId(link_id) {
-        let sqlRequest = "DELETE FROM "+ util.processUser() + "tag_link WHERE link_id=$link_id";
+    deleteByLinkId(link_id, req) {
+        let sqlRequest = "DELETE FROM "+ util.processUser(req) + "tag_link WHERE link_id=$link_id";
         let sqlParams = {$link_id: link_id};
         return this.common.run(sqlRequest, sqlParams);
     };
@@ -132,8 +132,8 @@ class Tag_linkDao {
      * @params id
      * returns database deletion status
      */
-    deleteTag(tag,link_id) {
-        let sqlRequest = "DELETE FROM "+ util.processUser() + "tag_link WHERE link_id=$link_id AND tag=$tag";
+    deleteTag(tag,link_id, req) {
+        let sqlRequest = "DELETE FROM "+ util.processUser(req) + "tag_link WHERE link_id=$link_id AND tag=$tag";
         let sqlParams = {
             $link_id: link_id,
             $tag: tag

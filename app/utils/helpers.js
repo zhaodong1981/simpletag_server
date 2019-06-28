@@ -1,8 +1,8 @@
-let processUser = function (username) {
-    if (typeof username === 'undefined' || username === ''){
-        return "dzhao_";
+let processUser = function (req) {
+    if (typeof req === 'undefined' || req === '' || req.token === 'undefined'|| req.token.ref === 'undefined'){
+        return "test_";
     }
-    return username + "_";
+    return req.token.ref;
 };
 
 /*

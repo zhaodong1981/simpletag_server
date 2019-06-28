@@ -33,7 +33,7 @@ class LinkController {
             page =1;
         }
         console.log("findByPageSize " + pagesize);
-        this.linkDao.findByPageSize(pagesize,page)
+        this.linkDao.findByPageSize(pagesize,page,req)
             .then(this.common.findSuccess(res))
             .catch(this.common.findError(res));
     };
@@ -43,11 +43,11 @@ class LinkController {
         let tag = req.query.tag;
                      
         if (typeof tag != 'undefined' && tag !=null && tag != '') {
-            this.linkDao.findByTag(tag)
+            this.linkDao.findByTag(tag,req)
             .then(this.common.findSuccess(res))
             .catch(this.common.findError(res));
         } else {
-            this.linkDao.findByKeywords(keywords)
+            this.linkDao.findByKeywords(keywords,req)
             .then(this.common.findSuccess(res))
             .catch(this.common.findError(res));
         }
@@ -59,8 +59,8 @@ class LinkController {
      * Counts all the records present in the database
      * @return count
      */
-    countAll(res) {
-        this.linkDao.countAll()
+    countAll(req,res) {
+        this.linkDao.countAll(req)
             .then(this.common.findSuccess(res))
             .catch(this.common.serverError(res));
     };
@@ -82,7 +82,7 @@ class LinkController {
             tags = [];
         }
         console.log("link_id="+link.id+",new tags: " + tags);
-        return this.linkDao.update(link).then(
+        return this.linkDao.update(link, req).then(
             this.taglinkDao.updateTagsforLink(link.id, tags))
           .then(this.common.editSuccess(res))
           .catch(this.common.serverError(res));
@@ -103,12 +103,12 @@ class LinkController {
        
         let tags = req.body.tags;
         if (typeof tags !== 'undefined' && tags.constructor === Array && tags.length >0){
-            return this.linkDao.create(link).then(
-              this.taglinkDao.createStr(tags,link.url))
+            return this.linkDao.create(link, req).then(
+              this.taglinkDao.createStr(tags,link.url,req))
             .then(this.common.editSuccess(res))
             .catch(this.common.serverError(res));
         } else {
-            return this.linkDao.create(link)
+            return this.linkDao.create(link, req)
             .then(this.common.editSuccess(res))
             .catch(this.common.serverError(res));
         }
@@ -123,7 +123,7 @@ class LinkController {
     deleteById(req, res) {
         let id = req.params.id;
 
-        this.linkDao.deleteById(id)
+        this.linkDao.deleteById(id,req)
             .then(this.common.editSuccess(res))
             .catch(this.common.serverError(res));
     };
@@ -136,7 +136,7 @@ class LinkController {
     exists(req, res) {
         let id = req.params.id;
 
-        this.linkDao.exists(id)
+        this.linkDao.exists(id, req)
             .then(this.common.existsSuccess(res))
             .catch(this.common.findError(res));
     };
