@@ -5,7 +5,7 @@ module.exports = jwt;
 
 function jwt() {
     const { secret } = config;
-    return expressJwt({ secret }).unless({
+    return expressJwt({ secret,requestProperty: 'token' }).unless({
         path: [
             // public routes that don't require authentication
             '/api/user/authenticate',
