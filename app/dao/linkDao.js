@@ -21,7 +21,7 @@ class LinkDao {
      */
     findByPageSize(pagesize,page,req) {
         let offset=pagesize * (page -1);
-        let sqlRequest = "SELECT id,title,url,description,date(createdate) cdate,date(modifydate) mdate,tag FROM " + util.processUser(req) 
+        let sqlRequest = "SELECT id,title,url,description,datetime(createdate) cdate,datetime(modifydate) mdate,tag FROM " + util.processUser(req) 
         + "links LEFT OUTER JOIN " + util.processUser(req) + "tag_link ON " + util.processUser(req) + "links.id=" + util.processUser(req) + "tag_link.link_id ORDER BY mdate DESC LIMIT "+pagesize + " OFFSET " + offset;
      //   let sqlRequest2 = "SELECT COUNT(*) AS count FROM links";
         console.log(sqlRequest);
@@ -56,7 +56,7 @@ class LinkDao {
          // keywords = newBuff.toString('UTF-8');//encoding into UTF-8 used by sqlite3
         }
         
-        let sqlRequest = "SELECT id,title,url,description,date(createdate) cdate,date(modifydate) mdate,tag FROM \
+        let sqlRequest = "SELECT id,title,url,description,datetime(createdate) cdate,datetime(modifydate) mdate,tag FROM \
         " + util.processUser(req) + "links LEFT OUTER JOIN " + util.processUser(req) + "tag_link ON " + util.processUser(req) + "links.id=" + util.processUser(req) + "tag_link.link_id WHERE title LIKE '%" + keywords + "%' or url LIKE '%" + keywords +
         "%' or " + util.processUser(req) + "tag_link.link_id in(select link_id from " + util.processUser(req) + "tag_link where tag LIKE '%" + keywords + "%') --case-insensitive ORDER BY mdate DESC";
         console.log(sqlRequest);
@@ -81,7 +81,7 @@ class LinkDao {
         tag = decodeURIComponent(tag);
         //let newBuff = Buffer.from(tag);
        // tag = newBuff.toString('UTF-8');//encoding into UTF-8 used by sqlite3
-        let sqlRequest = "SELECT id,title,url,description,date(createdate) cdate,date(modifydate) mdate,tag FROM " + util.processUser(req) + "links LEFT OUTER JOIN " + util.processUser(req) + "tag_link ON " + util.processUser(req) + "links.id=" + util.processUser(req) + "tag_link.link_id where \
+        let sqlRequest = "SELECT id,title,url,description,datetime(createdate) cdate,datetime(modifydate) mdate,tag FROM " + util.processUser(req) + "links LEFT OUTER JOIN " + util.processUser(req) + "tag_link ON " + util.processUser(req) + "links.id=" + util.processUser(req) + "tag_link.link_id where \
         " + util.processUser(req) + "tag_link.link_id in(select link_id from " + util.processUser(req) + "tag_link where tag = '" + tag + "')"  + " ORDER BY link_id ASC";
         console.log(sqlRequest);
         return this.common.findAll(sqlRequest).then(rows => {
