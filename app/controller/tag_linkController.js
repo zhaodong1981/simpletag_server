@@ -22,7 +22,7 @@ class Tag_linkController {
      * @return all entities
      */
     findAll(req, res) {
-        this.tag_linkDao.findAll()
+        this.tag_linkDao.findAll(req)
             .then(this.common.findSuccess(res))
             .catch(this.common.findError(res));
     };
@@ -49,7 +49,7 @@ class Tag_linkController {
         tag_link.link_id = req.body.link_id;
         tag_link.tag = req.body.tag;
 
-        return this.tag_linkDao.create(tag_link)
+        return this.tag_linkDao.create(tag_link, req)
             .then(this.common.editSuccess(res))
             .catch(this.common.serverError(res));
 

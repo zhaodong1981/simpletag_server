@@ -83,7 +83,7 @@ class LinkController {
         }
         console.log("link_id="+link.id+",new tags: " + tags);
         return this.linkDao.update(link, req).then(
-            this.taglinkDao.updateTagsforLink(link.id, tags))
+            this.taglinkDao.updateTagsforLink(link.id, tags, req))
           .then(this.common.editSuccess(res))
           .catch(this.common.serverError(res));
     };
