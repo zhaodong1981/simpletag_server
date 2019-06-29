@@ -41,8 +41,12 @@ class LinkController {
     findByKeywords(req,res) {
         let keywords = req.query.q;
         let tag = req.query.tag;
-                     
-        if (typeof tag != 'undefined' && tag !=null && tag != '') {
+        let url = req.query.url;
+        if(typeof url != 'undefined' && url !=null && url != ''){
+            this.linkDao.findByURL(url,req)
+            .then(this.common.findSuccess(res))
+            .catch(this.common.findError(res));
+        } else if (typeof tag != 'undefined' && tag !=null && tag != '') {
             this.linkDao.findByTag(tag,req)
             .then(this.common.findSuccess(res))
             .catch(this.common.findError(res));
@@ -53,7 +57,6 @@ class LinkController {
         }
        
     };
-
 
     /**
      * Counts all the records present in the database

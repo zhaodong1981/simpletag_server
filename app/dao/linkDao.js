@@ -46,7 +46,28 @@ class LinkDao {
            
         });
     };
+    findByURL(url,req){
+        
+        let sqlRequest = "SELECT id,title,url,description,datetime(createdate) cdate,datetime(modifydate) mdate,tag FROM \
+        " + util.processUser(req) + "links LEFT OUTER JOIN " + util.processUser(req) + "tag_link ON " + util.processUser(req) + "links.id=" + util.processUser(req) + "tag_link.link_id WHERE url = '" + url +
+        "' --case-insensitive ORDER BY mdate DESC";
+        console.log(sqlRequest);
+        return this.common.findAll(sqlRequest).then(rows => {
+            let links = [];
+            let current_link = null;
+            for (const row of rows) {
+                if ( current_link === null || row.id !== current_link.id ){
+                    current_link = new Link(row.id, row.title, row.url, row.description, row.cdate, row.mdate, []);
+                    links.push(current_link);
+                }
+                if (row.tag != null) {
+                    current_link.tags.push(row.tag);
+                }
+            }
+            return links;
+        });
 
+    }
 
     findByKeywords(keywords,req){
         if (typeof keywords != 'undefined'){
