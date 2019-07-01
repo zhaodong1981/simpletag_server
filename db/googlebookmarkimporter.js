@@ -30,6 +30,7 @@ for (const bookmark of bookmarks){
     link.title = bookmark.title;
     link.url = bookmark.url;
     link.description = "Imported from google bookmarks";
+    link.createdate = bookmark.timestamp;
     var tags = [];
     if(typeof bookmark.labels === 'undefined'){
         //no tags
@@ -59,11 +60,12 @@ function createLinkTags(link, tags){
 }
 function create(link) {
     let sqlRequest = "INSERT into " + schema + "links (title, url, description, createdate, modifydate) " +
-        "VALUES ($title, $url, $description, julianday('now'), julianday('now'))";
+        "VALUES ($title, $url, $description, datetime($createdate, 'unixepoch'), datetime('now'))";
     let sqlParams = {
         $title: link.title,
         $url: link.url,
         $description: link.description,
+        $createdate: link.createdate/1000000
     };
     return common.run(sqlRequest, sqlParams);
 };
