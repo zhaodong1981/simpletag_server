@@ -52,15 +52,15 @@ for (const bookmark of bookmarks){
 function createLinkTags(link, tags){
         
         if (typeof tags !== 'undefined' && tags.constructor === Array && tags.length >0){
-            return create(link).then(
-                createTags(tags,link.url));
+            return create(link).then(() => {
+                createTags(tags,link.url)});
         } else {
             return create(link);
         }
 }
 function create(link) {
     let sqlRequest = "INSERT into " + schema + "links (title, url, description, createdate, modifydate) " +
-        "VALUES ($title, $url, $description, datetime('now'), datetime($modifydate, 'unixepoch'))";
+        "VALUES ($title, $url, $description, datetime('now'), datetime($modifydate, 'unixepoch', 'localtime'))";
     let sqlParams = {
         $title: link.title,
         $url: link.url,
@@ -72,8 +72,9 @@ function create(link) {
 
 function createTags(tags,url) {
     let sqlRequest1 = "select id as link_id from "  + schema + "links WHERE url ='" + url +"' ORDER BY modifydate DESC LIMIT 1";
-     return this.common.findOne(sqlRequest1).then((row) => {
+    return common.findOne(sqlRequest1).then((row) => {
           let sqlRequest2 = "INSERT into "  + schema + "tag_link (tag,link_id) VALUES ";
+      //    console.log("adding tags for " + row.link_id);
           for (const tag of tags){
               sqlRequest2 += "('" + tag + "'," + row.link_id + "),"
           }
