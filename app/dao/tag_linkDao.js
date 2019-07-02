@@ -19,6 +19,24 @@ class Tag_linkDao {
      * @return all entities
      */
     findAll(req) {
+        //select tag from dzhao_tag_link GROUP BY TAG ORDER BY COUNT(TAG) DESC
+        //select tag, COUNT(TAG) num from dzhao_tag_link GROUP BY TAG ORDER BY num DESC;
+        let sqlRequest = "SELECT tag, COUNT(tag) num FROM "+ util.processUser(req) + "tag_link GROUP BY tag ORDER BY num DESC";
+        return this.common.findAll(sqlRequest).then(rows => {
+            let tag_links = [];
+            for (const row of rows) {
+                tag_links.push({tag: row.tag, count: row.num});
+            }
+            return tag_links;
+        });
+    };
+
+
+    /**
+     * Finds all entities.
+     * @return all entities
+     */
+    findAllWithLinks(req) {
         let sqlRequest = "SELECT * FROM "+ util.processUser(req) + "tag_link ORDER BY tag";
         return this.common.findAll(sqlRequest).then(rows => {
             let tag_links = [];
