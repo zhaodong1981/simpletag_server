@@ -141,7 +141,7 @@ class LinkDao {
             "title=$title, " +
             "url=$url, " +
             "description=$description, " +
-            "modifydate=datetime('now', 'unixepoch', 'localtime') " +
+            "modifydate=datetime('now') " +
             "WHERE id=$id";
 
         let sqlParams = {
@@ -160,7 +160,7 @@ class LinkDao {
      */
     create(Link,req) {
         let sqlRequest = "INSERT into " + util.processUser(req) + "links (title, url, description, createdate, modifydate) " +
-            "VALUES ($title, $url, $description, datetime('now', 'unixepoch', 'localtime'), datetime('now', 'unixepoch', 'localtime'))";
+            "VALUES ($title, $url, $description, datetime('now'), datetime('now'))";
         let sqlParams = {
             $title: Link.title,
             $url: Link.url,
