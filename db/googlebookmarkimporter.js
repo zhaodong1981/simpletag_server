@@ -1,3 +1,4 @@
+//google bookmarks are retrieved from this: https://www.google.com/bookmarks/?output=xml&num=10000
 var parser = require('xml2json');
 
 const Link = require('../app/model/link');
