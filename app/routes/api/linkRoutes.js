@@ -27,7 +27,7 @@ router.get('/exists/:id', function (req, res) {
 
 router.get('/', function (req, res) {
   //  linkController.findAll(res);
-    linkController.findByPageSize(req,res);
+    linkController.findLastModified(req,res);
 });
 
 router.put('/:id', function (req, res) {

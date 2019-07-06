@@ -26,6 +26,20 @@ class Common {
         });
     }
 
+    findAllArg(sqlRequest, sqlParams) {
+        return new Promise(function (resolve, reject) {
+            database.db.all(sqlRequest, sqlParams, function (err, rows) {
+                if (err) {
+                    reject(
+                        new DaoError(20, "Internal server error")
+                    );
+                } else {
+                    resolve(rows);
+                }
+            })
+        });
+    }
+
     findOne(sqlRequest, sqlParams) {
         return new Promise(function (resolve, reject) {
             let stmt = database.db.prepare(sqlRequest);

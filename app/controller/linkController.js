@@ -38,6 +38,14 @@ class LinkController {
             .catch(this.common.findError(res));
     };
 
+    findLastModified(req,res){
+        let limit = req.query.limit;
+        if (typeof limit === 'undefined'){
+            limit = -1;
+        }
+        this.linkDao.findLinks(limit,req).then(this.common.findSuccess(res))
+        .catch(this.common.findError(res));
+    }
     findByKeywords(req,res) {
         let keywords = req.query.q;
         let tag = req.query.tag;

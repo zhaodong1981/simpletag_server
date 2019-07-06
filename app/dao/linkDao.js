@@ -69,6 +69,43 @@ class LinkDao {
 
     }
 
+    findLinks(limit,req){
+        let sqlRequest1 = "SELECT id,title,url,description,datetime(createdate) cdate,datetime(modifydate) mdate FROM " + util.processUser(req) + "links ORDER BY mdate DESC LIMIT " + limit;
+        let links = [];
+        return this.common.findAll(sqlRequest1).then((rows) => {
+  //          console.log("step 1");
+            let current_link = null;
+            let ids = [];
+            for (const row of rows) {
+                if ( current_link == null || row.id != current_link.id ){
+                    current_link = new Link(row.id, row.title, row.url, row.description, row.cdate, row.mdate, []);
+                    links.push(current_link);
+                    ids.push(row.id);
+                }
+            }
+   //         console.log("links.length = " + links.length+", " + JSON.stringify(links));
+   //         console.log("IDs =" + JSON.stringify(ids));
+            return ids;
+        }).then((ids) =>{
+        //    console.log("step 2");
+            let sqlRequest2 = "SELECT link_ID, tag FROM " + util.processUser(req) + "tag_link where link_id in ("+ ids.map(function(){ return '?' }).join(',') + ' )';
+            return this.common.findAllArg(sqlRequest2, ids);
+        }).then((rows) => {
+  //          console.log("step 3");
+            for(const row of rows){
+                for(const link of links){
+                    if(link.id === row.link_id){
+                        link.tags.push(row.tag);
+                        break;
+                    }
+                }
+               
+            }
+ //           console.log("links = " + JSON.stringify(links));
+            return links;
+        });;
+    }
+
     findByKeywords(keywords,req){
         if (typeof keywords != 'undefined'){
           console.log(" converting " + keywords );
