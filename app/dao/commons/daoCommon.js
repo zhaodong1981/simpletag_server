@@ -31,7 +31,7 @@ class Common {
             database.db.all(sqlRequest, sqlParams, function (err, rows) {
                 if (err) {
                     reject(
-                        new DaoError(20, "Internal server error")
+                        new DaoError(20, "Internal server error: " + JSON.stringify(err))
                     );
                 } else {
                     resolve(rows);

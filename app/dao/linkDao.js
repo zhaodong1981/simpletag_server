@@ -6,6 +6,9 @@ const daoCommon = require('./commons/daoCommon');
 
 const util = require('../utils/helpers');
 
+// set the limit of number of values in the where in statement.
+const WHERE_IN_LIMIT = 999;
+
 /**
  * Link Data Access Object
  */
@@ -72,8 +75,9 @@ class LinkDao {
     findLinks(limit,req){
         let sqlRequest1 = "SELECT id,title,url,description,datetime(createdate) cdate,datetime(modifydate) mdate FROM " + util.processUser(req) + "links ORDER BY mdate DESC LIMIT " + limit;
         let links = [];
+//        console.log("limit="+limit);
         return this.common.findAll(sqlRequest1).then((rows) => {
-  //          console.log("step 1");
+ //           console.log("step 1");
             let current_link = null;
             let ids = [];
             for (const row of rows) {
@@ -87,11 +91,32 @@ class LinkDao {
    //         console.log("IDs =" + JSON.stringify(ids));
             return ids;
         }).then((ids) =>{
-        //    console.log("step 2");
-            let sqlRequest2 = "SELECT link_ID, tag FROM " + util.processUser(req) + "tag_link where link_id in ("+ ids.map(function(){ return '?' }).join(',') + ' )';
-            return this.common.findAllArg(sqlRequest2, ids);
+ //          console.log("step 2 ids="+ids);
+            
+            let sqlRequest2 = "SELECT link_ID, tag FROM " + util.processUser(req) + "tag_link where link_id in (";
+            if(ids.length <=WHERE_IN_LIMIT){
+                sqlRequest2 += ids.join(',');
+                sqlRequest2 += ' )';
+            } else{//the number of IDs exceeds the limit of db
+                console.log("number of ids exceeds db limit, so slice the array. ids.length = " + ids); 
+                var i,j,temparray,chunk = WHERE_IN_LIMIT;
+                for (i=0,j=ids.length; i<j; i+=chunk) {
+                    temparray = ids.slice(i,i+chunk);
+                    sqlRequest2 += temparray.join(',');
+                    sqlRequest2 += ' )';
+
+                    if (i+chunk >= j){
+                        break;
+                    } else{
+                        sqlRequest2 += " OR link_id IN (";
+                    }
+                }
+            }
+            
+ //           console.log("step 2 sqlRequest2="+sqlRequest2);
+            return this.common.findAll(sqlRequest2);
         }).then((rows) => {
-  //          console.log("step 3");
+ //           console.log("step 3");
             for(const row of rows){
                 for(const link of links){
                     if(link.id === row.link_id){
