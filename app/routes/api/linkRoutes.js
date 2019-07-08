@@ -30,6 +30,11 @@ router.get('/', function (req, res) {
     linkController.findLastModified(req,res);
 });
 
+router.get('/page', function (req, res) {
+    //  linkController.findAll(res);
+      linkController.findByPageSize(req,res);
+  });
+
 router.put('/:id', function (req, res) {
     linkController.update(req, res);
 });

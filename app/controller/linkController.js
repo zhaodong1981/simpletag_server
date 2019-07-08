@@ -26,7 +26,7 @@ class LinkController {
      */
     findByPageSize(req,res) {
 
-        let pagesize = req.query.per_page;
+        let pagesize = req.query.page_size;
         let page = req.query.page;
         if (typeof pagesize === 'undefined'){
             pagesize =-1;
