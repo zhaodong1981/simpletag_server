@@ -27,7 +27,7 @@ class LinkDao {
         let sqlRequest = "SELECT id,title,url,description,datetime(createdate) cdate,datetime(modifydate) mdate,tag FROM " + util.processUser(req) 
         + "links LEFT OUTER JOIN " + util.processUser(req) + "tag_link ON " + util.processUser(req) + "links.id=" + util.processUser(req) + "tag_link.link_id ORDER BY mdate DESC LIMIT "+pagesize + " OFFSET " + offset;
      //   let sqlRequest2 = "SELECT COUNT(*) AS count FROM links";
-        console.log(sqlRequest);
+   //    console.log(sqlRequest);
         return this.common.findAll(sqlRequest).then(rows => {
             let links = [];
             let current_link = null;
@@ -54,7 +54,7 @@ class LinkDao {
         let sqlRequest = "SELECT id,title,url,description,datetime(createdate) cdate,datetime(modifydate) mdate,tag FROM \
         " + util.processUser(req) + "links LEFT OUTER JOIN " + util.processUser(req) + "tag_link ON " + util.processUser(req) + "links.id=" + util.processUser(req) + "tag_link.link_id WHERE url = '" + url +
         "' --case-insensitive ORDER BY mdate DESC";
-        console.log(sqlRequest);
+    //    console.log(sqlRequest);
         return this.common.findAll(sqlRequest).then(rows => {
             let links = [];
             let current_link = null;
@@ -98,7 +98,7 @@ class LinkDao {
                 sqlRequest2 += ids.join(',');
                 sqlRequest2 += ' )';
             } else{//the number of IDs exceeds the limit of db
-                console.log("number of ids exceeds db limit, so slice the array. ids.length = " + ids); 
+   //             console.log("number of ids exceeds db limit, so slice the array. ids.length = " + ids); 
                 var i,j,temparray,chunk = WHERE_IN_LIMIT;
                 for (i=0,j=ids.length; i<j; i+=chunk) {
                     temparray = ids.slice(i,i+chunk);
@@ -133,7 +133,7 @@ class LinkDao {
 
     findByKeywords(keywords,req){
         if (typeof keywords != 'undefined'){
-          console.log(" converting " + keywords );
+    //      console.log(" converting " + keywords );
           keywords = decodeURIComponent(keywords);
          // let newBuff = Buffer.from(keywords);
          // keywords = newBuff.toString('UTF-8');//encoding into UTF-8 used by sqlite3
@@ -142,7 +142,7 @@ class LinkDao {
         let sqlRequest = "SELECT id,title,url,description,datetime(createdate) cdate,datetime(modifydate) mdate,tag FROM \
         " + util.processUser(req) + "links LEFT OUTER JOIN " + util.processUser(req) + "tag_link ON " + util.processUser(req) + "links.id=" + util.processUser(req) + "tag_link.link_id WHERE title LIKE '%" + keywords + "%' or url LIKE '%" + keywords +
         "%' or " + util.processUser(req) + "tag_link.link_id in(select link_id from " + util.processUser(req) + "tag_link where tag LIKE '%" + keywords + "%') --case-insensitive ORDER BY mdate DESC";
-        console.log(sqlRequest);
+    //    console.log(sqlRequest);
         return this.common.findAll(sqlRequest).then(rows => {
             let links = [];
             let current_link = null;
@@ -166,7 +166,7 @@ class LinkDao {
        // tag = newBuff.toString('UTF-8');//encoding into UTF-8 used by sqlite3
         let sqlRequest = "SELECT id,title,url,description,datetime(createdate) cdate,datetime(modifydate) mdate,tag FROM " + util.processUser(req) + "links LEFT OUTER JOIN " + util.processUser(req) + "tag_link ON " + util.processUser(req) + "links.id=" + util.processUser(req) + "tag_link.link_id where \
         " + util.processUser(req) + "tag_link.link_id in(select link_id from " + util.processUser(req) + "tag_link where tag = '" + tag + "')"  + " ORDER BY link_id ASC";
-        console.log(sqlRequest);
+      //  console.log(sqlRequest);
         return this.common.findAll(sqlRequest).then(rows => {
             let links = [];
             let current_link = null;

@@ -47,7 +47,7 @@ for (const bookmark of bookmarks){
       //  console.log("number of tags= " + tags.length + ",tags = " +tags);
     }
     createLinkTags(link,tags);
-    console.log("Create %s bookmark ", ++i);
+   // console.log("Create %s bookmark ", ++i);
 }
 
 function createLinkTags(link, tags){

@@ -77,7 +77,7 @@ class Common {
                         new DaoError(20, err)
                     );
                 } else {
-                    console.log("daoCommon.run: records updated: " + this.changes );
+   //                 console.log("daoCommon.run: records updated: " + this.changes );
                     resolve(true);
                 }
               
@@ -93,7 +93,7 @@ class Common {
                      new DaoError(20, err)
                 );
             } else {
-                console.log("daoCommon.runNoArg: operation succeeded");
+  //              console.log("daoCommon.runNoArg: operation succeeded");
                 resolve(true);
             }
             })

@@ -115,7 +115,7 @@ class Tag_linkDao {
     };
     updateTagsforLink(link_id, tags, req) {
         let sqlRequest = "DELETE FROM " + util.processUser(req) + "tag_link WHERE link_id=$link_id";
-        console.log("Updating tags for link " + link_id);
+   //     console.log("Updating tags for link " + link_id);
         let sqlParams = {
             $link_id: link_id
         };
@@ -128,7 +128,7 @@ class Tag_linkDao {
                     sqlRequest2 += "('" + tag + "'," + link_id + "),"
                 }
                 sqlRequest2 = sqlRequest2.slice(0, -1);
-                console.log("Updating tags for link " + sqlRequest2);
+    //            console.log("Updating tags for link " + sqlRequest2);
                 return this.common.runNoArg(sqlRequest2);
             });
         }

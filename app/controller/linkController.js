@@ -32,7 +32,7 @@ class LinkController {
             pagesize =-1;
             page =1;
         }
-        console.log("findByPageSize " + pagesize);
+ //       console.log("findByPageSize " + pagesize);
         this.linkDao.findByPageSize(pagesize,page,req)
             .then(this.common.findSuccess(res))
             .catch(this.common.findError(res));
@@ -92,7 +92,7 @@ class LinkController {
         if (typeof tags === 'undefined' || tags.constructor !== Array && tags.length === 0){
             tags = [];
         }
-        console.log("link_id="+link.id+",new tags: " + tags);
+ //       console.log("link_id="+link.id+",new tags: " + tags);
         return this.linkDao.update(link, req).then(
             this.taglinkDao.updateTagsforLink(link.id, tags, req))
           .then(this.common.editSuccess(res))
